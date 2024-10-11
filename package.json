@@ -10,6 +10,7 @@
   },
   "scripts": {
     "dev": "next dev",
+    "test": "echo \"No test specified\" && exit 0",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
