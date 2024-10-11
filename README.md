@@ -164,7 +164,7 @@ For an in-depth explanation of the database structure, entities, and relationshi
 ## Project Structure
 
 ```plaintext
-community-app-mvp/
+community-pro/
 ├── src/
 │   ├── components/
 │   │   ├── NavBar.jsx
@@ -190,8 +190,8 @@ community-app-mvp/
 ├── public/
 │   └── index.html
 ├── docs/
-│   ├── api-documentation.md
-│   ├── database-schema.md
+│   ├── api.md
+│   ├── database.md
 │   └── openapi.yaml
 ├── .env
 ├── .gitignore
@@ -227,8 +227,8 @@ We welcome contributions to improve this project!
 2. **Clone Your Fork**
 
    ```bash
-   git clone https://github.com/yourusername/community-app-mvp.git
-   cd community-app-mvp
+   git clone https://github.com/yourusername/community-pro.git
+   cd community-pro
    ```
 
 3. **Create a New Branch**
