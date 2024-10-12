@@ -16,24 +16,38 @@ interface ConversationFeedClientProps {
 export default function ConversationFeedClient({
   initialConversations,
   initialPage,
-  totalPages,
+  totalPages: initialTotalPages,
   limit,
   topicId,
 }: ConversationFeedClientProps) {
-  const [conversations] = useState(initialConversations);
+  const [conversations, setConversations] = useState(initialConversations);
   const [page, setPage] = useState(initialPage);
+  const [totalPages, setTotalPages] = useState(initialTotalPages);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handlePageChange = async (newPage: number) => {
-    // TODO: API call to get new data
-    // Implementar la llamada a la API para obtener nuevos datos
-    console.log(
-      `Fetching page ${newPage} with limit ${limit} and topicId ${topicId}`
-    );
-
-    // TODO: Replace this with a real API call to fetch new data
-    // from the server
-    setPage(newPage);
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `/api/conversations?page=${newPage}&limit=${limit}${topicId ? `&topicId=${topicId}` : ''}`
+      );
+      if (!response.ok) {
+        throw new Error('Failed to fetch conversations');
+      }
+      const data = await response.json();
+      setConversations(data.conversations);
+      setPage(data.currentPage);
+      setTotalPages(data.totalPages);
+    } catch (error) {
+      console.error('Error fetching conversations:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  if (isLoading) return <p>Loading...</p>;
+  if (!isLoading && conversations.length === 0)
+    return <p>No conversations found.</p>;
 
   return (
     <div>
