@@ -1,7 +1,9 @@
 {
   "name": "community-pro",
+  "description": "A community platform to share knowledge and connect with other developers",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "author": {
     "name": "Carlos Azaustre",
     "email": "cazaustre@gmail.com",
@@ -14,24 +16,33 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "db:start": "docker-compose up -d",
+    "db:stop": "docker-compose down",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:studio": "prisma studio"
   },
   "dependencies": {
+    "@prisma/client": "^5.20.0",
     "next": "14.2.15",
     "react": "^18",
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "bcrypt": "^5.1.1",
     "eslint": "^8",
     "eslint-config-next": "14.2.15",
     "husky": "^8.0.0",
     "lint-staged": "^15.2.10",
     "postcss": "^8",
     "prettier": "^3.3.3",
+    "prisma": "^5.20.0",
     "tailwindcss": "^3.4.1",
+    "tsx": "^4.19.1",
     "typescript": "^5"
   },
   "lint-staged": {
