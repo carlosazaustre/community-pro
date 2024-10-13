@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import prisma from '@/lib/prisma';
 import { ConversationRepository } from '@/domain/interfaces/ConversationRepository';
 import { Conversation } from '@/domain/entities/Conversation';
 import { User } from '@/domain/entities/User';
@@ -9,7 +10,8 @@ export class PrismaConversationRepository implements ConversationRepository {
   private prisma: PrismaClient;
 
   constructor() {
-    this.prisma = new PrismaClient();
+    // this.prisma = new PrismaClient();
+    this.prisma = prisma;
   }
 
   /**
