@@ -1,3 +1,5 @@
+// Page: /api
+
 'use client';
 
 import { useEffect, useState } from 'react';

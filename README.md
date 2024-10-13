@@ -172,7 +172,6 @@ community-pro/
 ├── src/
 │   ├── app/
 │   │   ├── api/
-│   │   ├── api-docs/
 │   │   ├── fonts/
 │   │   ├── globals.css
 │   │   ├── layout.tsx
