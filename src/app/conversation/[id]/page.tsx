@@ -1,5 +1,4 @@
 // Page: /conversation/:id
-
 import ConversationDetailsServer from '@/components/ConversationDetailsServer';
 
 interface ConversationDetailPageProps {
