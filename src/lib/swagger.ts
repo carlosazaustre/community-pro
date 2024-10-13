@@ -1,7 +1,12 @@
-import { OAS3Definition, OAS3Options } from 'openapi-types';
 import swaggerJsdoc from 'swagger-jsdoc';
+import { SwaggerDefinition } from 'swagger-jsdoc';
 
-const options: OAS3Options = {
+interface SwaggerOptions {
+  definition: SwaggerDefinition;
+  apis: string[];
+}
+
+const options: SwaggerOptions = {
   definition: {
     openapi: '3.0.0',
     info: {
@@ -11,7 +16,7 @@ const options: OAS3Options = {
     },
     servers: [
       {
-        url: 'http://localhost:3000',
+        url: 'http://localhost:3000/api',
         description: 'Development server',
       },
     ],
@@ -20,6 +25,6 @@ const options: OAS3Options = {
   apis: ['./src/app/api/**/*.ts'],
 };
 
-const swaggerSpec = swaggerJsdoc(options) as OAS3Definition;
+const swaggerSpec = swaggerJsdoc(options);
 
 export default swaggerSpec;
