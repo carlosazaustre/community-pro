@@ -3,6 +3,7 @@ import { ConversationRepository } from '@/domain/interfaces/ConversationReposito
 import { Conversation } from '@/domain/entities/Conversation';
 import { User } from '@/domain/entities/User';
 import { Topic } from '@/domain/entities/Topic';
+import { Comment } from '@/domain/entities/Comment';
 
 export class PrismaConversationRepository implements ConversationRepository {
   private prisma: PrismaClient;
@@ -114,6 +115,12 @@ export class PrismaConversationRepository implements ConversationRepository {
     return user;
   }
 
+  /**
+   * Retrieves the topic associated with a specific conversation.
+   *
+   * @param conversationId - The unique identifier of the conversation.
+   * @returns A promise that resolves to the topic of the conversation, or null if no topic is found.
+   */
   async getTopicForConversation(conversationId: number): Promise<Topic | null> {
     const topic = await this.prisma.conversation
       .findUnique({
@@ -130,6 +137,29 @@ export class PrismaConversationRepository implements ConversationRepository {
       .then((result) => result?.topic || null);
 
     return topic;
+  }
+
+  /**
+   * Retrieves comments for a specific conversation.
+   *
+   * @param {number} conversationId - The ID of the conversation to retrieve comments for.
+   * @returns {Promise<Comment[]>} A promise that resolves to an array of comments.
+   */
+  async getCommentsForConversation(conversationId: number): Promise<Comment[]> {
+    const comments = await this.prisma.comment.findMany({
+      where: { conversationId },
+      orderBy: { createdAt: 'asc' },
+      include: {
+        user: {
+          select: {
+            id: true,
+            username: true,
+          },
+        },
+      },
+    });
+
+    return comments;
   }
 
   /**

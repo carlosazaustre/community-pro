@@ -1,7 +1,12 @@
 import { Conversation } from '@/domain/entities/Conversation';
 import { User } from '@/domain/entities/User';
 import { Topic } from '@/domain/entities/Topic';
+import { Comment } from '@/domain/entities/Comment';
 import { ConversationDTO } from '@/application/dtos/ConversationDTO';
+import {
+  ConversationDetailsDTO,
+  CommentDTO,
+} from '@/application/dtos/ConversationDetailsDTO';
 
 export class ConversationMapper {
   static toDTO(
@@ -28,6 +33,32 @@ export class ConversationMapper {
           }
         : null,
       commentCount: commentCount,
+    };
+  }
+
+  static toDetailsDTO(
+    conversation: Conversation,
+    user: User,
+    topic: Topic | null,
+    comments: Comment[]
+  ): ConversationDetailsDTO {
+    const commentCount = Array.isArray(comments) ? comments.length : 0;
+
+    return {
+      ...this.toDTO(conversation, user, topic, commentCount),
+      comments: Array.isArray(comments) ? comments?.map(this.toCommentDTO) : [],
+    };
+  }
+
+  private static toCommentDTO(comment: Comment): CommentDTO {
+    return {
+      id: comment.id,
+      content: comment.content,
+      createdAt: comment.createdAt.toISOString(),
+      user: {
+        id: comment.user.id,
+        username: comment.user.username,
+      },
     };
   }
 }
