@@ -1,4 +1,6 @@
-import { Conversation, User, Topic } from '../entities/Conversation';
+import { Conversation } from '../entities/Conversation';
+import { User } from '../entities/User';
+import { Topic } from '../entities/Topic';
 
 export interface ConversationWithDetails extends Conversation {
   user: User;

@@ -1,4 +1,6 @@
-import { Conversation, User, Topic } from '@/domain/entities/Conversation';
+import { Conversation } from '@/domain/entities/Conversation';
+import { User } from '@/domain/entities/User';
+import { Topic } from '@/domain/entities/Topic';
 import { ConversationDTO } from '@/application/dtos/ConversationDTO';
 
 export class ConversationMapper {
