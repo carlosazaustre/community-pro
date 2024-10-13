@@ -1,7 +1,19 @@
-import { PrismaClient } from '@prisma/client';
-import { ConversationRepository } from '@/domain/interfaces/ConversationRepository';
-import { Conversation } from '@/domain/entities/Conversation';
-import { ConversationMapper } from '../mappers/ConversationMapper';
+import {
+  PrismaClient,
+  Conversation as PrismaConversation,
+  User as PrismaUser,
+  Topic as PrismaTopic,
+} from '@prisma/client';
+import {
+  ConversationRepository,
+  ConversationWithDetails,
+} from '@/domain/interfaces/ConversationRepository';
+
+type PrismaConversationWithDetails = PrismaConversation & {
+  user: PrismaUser;
+  topic: PrismaTopic | null;
+  _count: { comments: number };
+};
 
 export class PrismaConversationRepository implements ConversationRepository {
   private prisma: PrismaClient;
@@ -10,15 +22,43 @@ export class PrismaConversationRepository implements ConversationRepository {
     this.prisma = new PrismaClient();
   }
 
+  private mapToConversationWithDetails(
+    prismaConversation: PrismaConversationWithDetails
+  ): ConversationWithDetails {
+    return {
+      id: prismaConversation.id,
+      title: prismaConversation.title,
+      content: prismaConversation.content,
+      createdAt: prismaConversation.createdAt,
+      updatedAt: prismaConversation.updatedAt,
+      isPinned: prismaConversation.isPinned,
+      userId: prismaConversation.userId,
+      topicId: prismaConversation.topicId,
+      user: {
+        id: prismaConversation.user.id,
+        username: prismaConversation.user.username,
+      },
+      topic: prismaConversation.topic
+        ? {
+            id: prismaConversation.topic.id,
+            name: prismaConversation.topic.name,
+          }
+        : null,
+      _count: {
+        comments: prismaConversation._count.comments,
+      },
+    };
+  }
+
   async getConversations(
     page: number,
     limit: number,
     topicId?: number
-  ): Promise<{ conversations: Conversation[]; totalItems: number }> {
+  ): Promise<{ conversations: ConversationWithDetails[]; totalItems: number }> {
     const where = topicId ? { topicId } : {};
     const skip = (page - 1) * limit;
 
-    const [conversations, totalItems] = await Promise.all([
+    const [prismaConversations, totalItems] = await Promise.all([
       this.prisma.conversation.findMany({
         where,
         skip,
@@ -35,8 +75,12 @@ export class PrismaConversationRepository implements ConversationRepository {
       this.prisma.conversation.count({ where }),
     ]);
 
+    const conversations = prismaConversations.map(
+      this.mapToConversationWithDetails
+    );
+
     return {
-      conversations: conversations.map(ConversationMapper.toDTO),
+      conversations,
       totalItems,
     };
   }
