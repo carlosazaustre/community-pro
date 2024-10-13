@@ -5,6 +5,16 @@ import { ConversationMapper } from '@/infrastructure/mappers/ConversationMapper'
 export class GetConversationsUseCase {
   constructor(private conversationRepository: ConversationRepository) {}
 
+  /**
+   * Executes the use case to retrieve conversations with additional details.
+   *
+   * @param {number} [page=1] - The page number to retrieve.
+   * @param {number} [limit=20] - The number of conversations per page.
+   * @param {number} [topicId] - The optional topic ID to filter conversations.
+   * @returns {Promise<{ conversations: ConversationDTO[]; totalPages: number }>}
+   *          A promise that resolves to an object containing the conversations
+   *          and the total number of pages.
+   */
   async execute(
     page: number = 1,
     limit: number = 20,

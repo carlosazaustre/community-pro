@@ -1,6 +1,7 @@
 import { Conversation } from '../entities/Conversation';
 import { User } from '../entities/User';
 import { Topic } from '../entities/Topic';
+
 export interface ConversationRepository {
   getConversations(
     page: number,

@@ -58,6 +58,22 @@ import { PrismaConversationRepository } from '@/infrastructure/database/PrismaCo
  *                   type: string
  *                   description: Error message.
  */
+
+/**
+ * Handles the GET request to fetch conversations.
+ *
+ * @param {NextRequest} request - The incoming request object.
+ * @returns {Promise<NextResponse>} - A promise that resolves to the response object containing conversations data or an error message.
+ *
+ * The function extracts query parameters from the request URL:
+ * - `page`: The page number for pagination (default is 1).
+ * - `limit`: The number of items per page (default is 10).
+ * - `topicId`: The ID of the topic to filter conversations (optional).
+ *
+ * It then uses a repository and a use case to fetch the conversations and total pages.
+ * If successful, it returns a JSON response with the conversations, total pages, and current page.
+ * If an error occurs, it logs the error and returns a JSON response with an error message and a 500 status code.
+ */
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const page = Number(searchParams.get('page')) || 1;

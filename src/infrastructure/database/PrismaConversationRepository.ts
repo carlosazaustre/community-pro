@@ -3,6 +3,7 @@ import { ConversationRepository } from '@/domain/interfaces/ConversationReposito
 import { Conversation } from '@/domain/entities/Conversation';
 import { User } from '@/domain/entities/User';
 import { Topic } from '@/domain/entities/Topic';
+
 export class PrismaConversationRepository implements ConversationRepository {
   private prisma: PrismaClient;
 
@@ -10,6 +11,14 @@ export class PrismaConversationRepository implements ConversationRepository {
     this.prisma = new PrismaClient();
   }
 
+  /**
+   * Retrieves a paginated list of conversations from the database.
+   *
+   * @param page - The page number to retrieve.
+   * @param limit - The number of conversations to retrieve per page.
+   * @param topicId - (Optional) The ID of the topic to filter conversations by.
+   * @returns A promise that resolves to an object containing the list of conversations and the total number of items.
+   */
   async getConversations(
     page: number,
     limit: number,
@@ -47,6 +56,13 @@ export class PrismaConversationRepository implements ConversationRepository {
     };
   }
 
+  /**
+   * Retrieves the details of a specific conversation by its ID.
+   *
+   * @param {number} conversationId - The unique identifier of the conversation.
+   * @returns {Promise<Conversation>} A promise that resolves to the conversation details.
+   * @throws {Error} If the conversation is not found.
+   */
   async getConversationDetails(conversationId: number): Promise<Conversation> {
     const conversation = await this.prisma.conversation.findUnique({
       where: { id: conversationId },
@@ -69,6 +85,13 @@ export class PrismaConversationRepository implements ConversationRepository {
     return conversation;
   }
 
+  /**
+   * Retrieves the user associated with a specific conversation.
+   *
+   * @param conversationId - The unique identifier of the conversation.
+   * @returns A promise that resolves to the user associated with the conversation.
+   * @throws An error if no user is found for the given conversation.
+   */
   async getUserForConversation(conversationId: number): Promise<User> {
     const user = await this.prisma.conversation
       .findUnique({
@@ -109,6 +132,12 @@ export class PrismaConversationRepository implements ConversationRepository {
     return topic;
   }
 
+  /**
+   * Retrieves the count of comments for a specific conversation.
+   *
+   * @param conversationId - The unique identifier of the conversation.
+   * @returns A promise that resolves to the number of comments associated with the given conversation.
+   */
   async getCommentCountForConversation(
     conversationId: number
   ): Promise<number> {
