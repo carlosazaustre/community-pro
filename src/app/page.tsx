@@ -1,3 +1,5 @@
+// Page: /
+
 import ConversationFeed from '@/components/ConversationFeedServer';
 
 interface HomeProps {
@@ -12,16 +14,14 @@ export default async function Home({ searchParams }: HomeProps) {
     : undefined;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex flex-col lg:flex-row gap-8">
-        <main className="lg:w-2/3">
-          <h1 className="text-3xl font-bold text-gray-900 mb-6">
-            Community Feed
-          </h1>
-          <ConversationFeed page={page} limit={limit} topicId={topicId} />
-        </main>
-        <aside className="lg:w-1/3">Members Ranking</aside>
-      </div>
+    <div className="flex flex-col lg:flex-row gap-8">
+      <main className="lg:w-2/3">
+        <h1 className="text-3xl font-bold text-gray-900 mb-6">
+          Community Feed
+        </h1>
+        <ConversationFeed page={page} limit={limit} topicId={topicId} />
+      </main>
+      <aside className="lg:w-1/3">Members Ranking</aside>
     </div>
   );
 }

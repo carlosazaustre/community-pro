@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { LogOut, Bell, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar } from '@/components/ui/avatar';
@@ -17,7 +18,7 @@ const NavBar: React.FC = () => {
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
               <span className="text-2xl font-bold text-yellow-400">
-                Community-Pro
+                <Link href="/">Community-Pro</Link>
               </span>
             </div>
           </div>
