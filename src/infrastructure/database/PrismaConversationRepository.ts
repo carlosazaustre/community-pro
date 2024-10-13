@@ -1,20 +1,8 @@
-import {
-  PrismaClient,
-  Conversation as PrismaConversation,
-  User as PrismaUser,
-  Topic as PrismaTopic,
-} from '@prisma/client';
-import {
-  ConversationRepository,
-  ConversationWithDetails,
-} from '@/domain/interfaces/ConversationRepository';
-
-type PrismaConversationWithDetails = PrismaConversation & {
-  user: PrismaUser;
-  topic: PrismaTopic | null;
-  _count: { comments: number };
-};
-
+import { PrismaClient } from '@prisma/client';
+import { ConversationRepository } from '@/domain/interfaces/ConversationRepository';
+import { Conversation } from '@/domain/entities/Conversation';
+import { User } from '@/domain/entities/User';
+import { Topic } from '@/domain/entities/Topic';
 export class PrismaConversationRepository implements ConversationRepository {
   private prisma: PrismaClient;
 
@@ -22,66 +10,112 @@ export class PrismaConversationRepository implements ConversationRepository {
     this.prisma = new PrismaClient();
   }
 
-  private mapToConversationWithDetails(
-    prismaConversation: PrismaConversationWithDetails
-  ): ConversationWithDetails {
-    return {
-      id: prismaConversation.id,
-      title: prismaConversation.title,
-      content: prismaConversation.content,
-      createdAt: prismaConversation.createdAt,
-      updatedAt: prismaConversation.updatedAt,
-      isPinned: prismaConversation.isPinned,
-      userId: prismaConversation.userId,
-      topicId: prismaConversation.topicId,
-      user: {
-        id: prismaConversation.user.id,
-        username: prismaConversation.user.username,
-      },
-      topic: prismaConversation.topic
-        ? {
-            id: prismaConversation.topic.id,
-            name: prismaConversation.topic.name,
-          }
-        : null,
-      _count: {
-        comments: prismaConversation._count.comments,
-      },
-    };
-  }
-
   async getConversations(
     page: number,
     limit: number,
     topicId?: number
-  ): Promise<{ conversations: ConversationWithDetails[]; totalItems: number }> {
+  ): Promise<{
+    conversations: Conversation[];
+    totalItems: number;
+  }> {
     const where = topicId ? { topicId } : {};
     const skip = (page - 1) * limit;
 
-    const [prismaConversations, totalItems] = await Promise.all([
+    const [conversations, totalItems] = await Promise.all([
       this.prisma.conversation.findMany({
         where,
         skip,
         take: limit,
         orderBy: { createdAt: 'desc' },
-        include: {
-          user: true,
-          topic: true,
-          _count: {
-            select: { comments: true },
-          },
+        select: {
+          id: true,
+          title: true,
+          content: true,
+          createdAt: true,
+          updatedAt: true,
+          isPinned: true,
+          userId: true,
+          topicId: true,
         },
       }),
       this.prisma.conversation.count({ where }),
     ]);
 
-    const conversations = prismaConversations.map(
-      this.mapToConversationWithDetails
-    );
-
     return {
       conversations,
       totalItems,
     };
+  }
+
+  async getConversationDetails(conversationId: number): Promise<Conversation> {
+    const conversation = await this.prisma.conversation.findUnique({
+      where: { id: conversationId },
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        createdAt: true,
+        updatedAt: true,
+        isPinned: true,
+        userId: true,
+        topicId: true,
+      },
+    });
+
+    if (!conversation) {
+      throw new Error('Conversation not found');
+    }
+
+    return conversation;
+  }
+
+  async getUserForConversation(conversationId: number): Promise<User> {
+    const user = await this.prisma.conversation
+      .findUnique({
+        where: { id: conversationId },
+        select: {
+          user: {
+            select: {
+              id: true,
+              username: true,
+            },
+          },
+        },
+      })
+      .then((result) => result?.user);
+
+    if (!user) {
+      throw new Error('User not found for conversation');
+    }
+
+    return user;
+  }
+
+  async getTopicForConversation(conversationId: number): Promise<Topic | null> {
+    const topic = await this.prisma.conversation
+      .findUnique({
+        where: { id: conversationId },
+        select: {
+          topic: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      })
+      .then((result) => result?.topic || null);
+
+    return topic;
+  }
+
+  async getCommentCountForConversation(
+    conversationId: number
+  ): Promise<number> {
+    const count = await this.prisma.comment.count({
+      where: { conversationId },
+    });
+
+    return count;
   }
 }

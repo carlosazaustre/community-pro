@@ -5,11 +5,10 @@ import { ConversationDTO } from '@/application/dtos/ConversationDTO';
 
 export class ConversationMapper {
   static toDTO(
-    conversation: Conversation & {
-      user: User;
-      topic: Topic | null;
-      _count?: { comments: number };
-    }
+    conversation: Conversation,
+    user: User,
+    topic: Topic | null,
+    commentCount: number
   ): ConversationDTO {
     return {
       id: conversation.id,
@@ -19,16 +18,16 @@ export class ConversationMapper {
       updatedAt: conversation.updatedAt.toISOString(),
       isPinned: conversation.isPinned,
       user: {
-        id: conversation.user.id,
-        username: conversation.user.username,
+        id: user.id,
+        username: user.username,
       },
-      topic: conversation.topic
+      topic: topic
         ? {
-            id: conversation.topic.id,
-            name: conversation.topic.name,
+            id: topic.id,
+            name: topic.name,
           }
         : null,
-      commentCount: conversation._count?.comments ?? 0,
+      commentCount: commentCount,
     };
   }
 }

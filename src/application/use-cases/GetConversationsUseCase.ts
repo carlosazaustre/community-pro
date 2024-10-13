@@ -1,33 +1,9 @@
 import { ConversationDTO } from '../dtos/ConversationDTO';
-import {
-  ConversationRepository,
-  ConversationWithDetails,
-} from '@/domain/interfaces/ConversationRepository';
+import { ConversationRepository } from '@/domain/interfaces/ConversationRepository';
+import { ConversationMapper } from '@/infrastructure/mappers/ConversationMapper';
 
 export class GetConversationsUseCase {
   constructor(private conversationRepository: ConversationRepository) {}
-
-  private mapToDTO(conversation: ConversationWithDetails): ConversationDTO {
-    return {
-      id: conversation.id,
-      title: conversation.title,
-      content: conversation.content,
-      createdAt: conversation.createdAt.toISOString(),
-      updatedAt: conversation.updatedAt.toISOString(),
-      isPinned: conversation.isPinned,
-      user: {
-        id: conversation.user.id,
-        username: conversation.user.username,
-      },
-      topic: conversation.topic
-        ? {
-            id: conversation.topic.id,
-            name: conversation.topic.name,
-          }
-        : null,
-      commentCount: conversation._count.comments,
-    };
-  }
 
   async execute(
     page: number = 1,
@@ -37,9 +13,29 @@ export class GetConversationsUseCase {
     const { conversations, totalItems } =
       await this.conversationRepository.getConversations(page, limit, topicId);
 
-    const totalPages = Math.ceil(totalItems / limit);
-    const conversationsDTOs = conversations.map(this.mapToDTO);
+    const conversationsWithDetails = await Promise.all(
+      conversations.map(async (conversation) => {
+        const user = await this.conversationRepository.getUserForConversation(
+          conversation.id
+        );
+        const topic = await this.conversationRepository.getTopicForConversation(
+          conversation.id
+        );
+        const commentCount =
+          await this.conversationRepository.getCommentCountForConversation(
+            conversation.id
+          );
 
-    return { conversations: conversationsDTOs, totalPages };
+        return ConversationMapper.toDTO(
+          conversation,
+          user,
+          topic,
+          commentCount
+        );
+      })
+    );
+
+    const totalPages = Math.ceil(totalItems / limit);
+    return { conversations: conversationsWithDetails, totalPages };
   }
 }
