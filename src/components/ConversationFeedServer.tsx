@@ -1,5 +1,5 @@
 import { GetConversationsUseCase } from '@/application/use-cases/GetConversationsUseCase';
-import { PrismaConversationRepository } from '@/infrastructure/database/PrismaConversationRepository';
+import { VercelPostgresConversationRepository } from '@/infrastructure/database/VercelPostgresConversationRepository';
 import ConversationFeedClient from '@/components/ConversationFeedClient';
 
 interface ConversationFeedServerProps {
@@ -13,7 +13,7 @@ export default async function ConversationFeedServer({
   limit,
   topicId,
 }: ConversationFeedServerProps) {
-  const repository = new PrismaConversationRepository();
+  const repository = new VercelPostgresConversationRepository();
   const useCase = new GetConversationsUseCase(repository);
   const { conversations, totalPages } = await useCase.execute(
     page,

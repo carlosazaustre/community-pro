@@ -2,7 +2,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { GetConversationsUseCase } from '@/application/use-cases/GetConversationsUseCase';
-import { PrismaConversationRepository } from '@/infrastructure/database/PrismaConversationRepository';
+import { VercelPostgresConversationRepository } from '@/infrastructure/database/VercelPostgresConversationRepository';
 
 /**
  * @openapi
@@ -83,7 +83,7 @@ export async function GET(request: NextRequest) {
     : undefined;
 
   try {
-    const repository = new PrismaConversationRepository();
+    const repository = new VercelPostgresConversationRepository();
     const useCase = new GetConversationsUseCase(repository);
     const { conversations, totalPages } = await useCase.execute(
       page,
