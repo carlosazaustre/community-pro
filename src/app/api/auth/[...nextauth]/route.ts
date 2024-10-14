@@ -11,6 +11,7 @@ const userRepository = new VercelPostgresUserRepository();
 const authenticateUserUseCase = new AuthenticateUserUseCase(userRepository);
 
 export const authOptions: NextAuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     CredentialsProvider({
       name: 'Credentials',
