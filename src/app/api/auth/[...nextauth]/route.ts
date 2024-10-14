@@ -1,4 +1,5 @@
-// app/api/auth/[...nextauth]/route.ts
+// Route: /api/auth/*
+
 import NextAuth from 'next-auth';
 import type { NextAuthOptions, User } from 'next-auth';
 import type { JWT } from 'next-auth/jwt';
@@ -42,6 +43,14 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: '/auth/signin',
   },
+  events: {
+    async signOut(message) {
+      console.log('User session closed:', message);
+    },
+    async signIn(message) {
+      console.log('User signed in:', message);
+    },
+  },
   callbacks: {
     async jwt({ token, user }: { token: JWT; user?: User }) {
       if (user) {
@@ -64,4 +73,18 @@ export const authOptions: NextAuthOptions = {
 };
 
 const handler = NextAuth(authOptions);
+/**
+ * @openapi
+ * /api/auth/[...nextauth]:
+ *   get:
+ *     summary: Handle GET requests for authentication
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *   post:
+ *     summary: Handle POST requests for authentication
+ *     responses:
+ *       200:
+ *         description: Successful response
+ */
 export { handler as GET, handler as POST };

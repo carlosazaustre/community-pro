@@ -3,9 +3,10 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { LogOut, Bell, Menu } from 'lucide-react';
+import { Bell, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar } from '@/components/ui/avatar';
+import LogoutButton from '@/components/auth/LogoutButton';
 
 const NavBar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -39,11 +40,7 @@ const NavBar: React.FC = () => {
                     <Image width={32} height={32} src="/placeholder.svg" alt="User avatar" />
                   </Avatar>
                 </div>
-                <Link href="/">
-                  <Button onClick={() => setIsLoggedIn(!isLoggedIn)} variant="secondary" className="ml-3">
-                    <LogOut size={15} />
-                  </Button>
-                </Link>
+                <LogoutButton />
               </>
             ) : (
               <div className="ml-3 flex items-center">
@@ -96,9 +93,7 @@ const NavBar: React.FC = () => {
                     <div className="text-sm font-medium text-gray-500">user@example.com</div>
                   </div>
                 </div>
-                <Button variant="ghost" className="w-full justify-center">
-                  Logout
-                </Button>
+                <LogoutButton />
               </>
             ) : (
               <div className="mt-3 space-y-1">
