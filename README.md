@@ -14,11 +14,19 @@ Welcome to the repository for the **Community Web Application**. This project is
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
     - [Environment Variables](#environment-variables)
-    - [Database Setup](#database-setup)
     - [Running the Application](#running-the-application)
   - [API Documentation](#api-documentation)
   - [Database Schema](#database-schema)
   - [Project Structure](#project-structure)
+  - [Applied Clean Architecture principles](#applied-clean-architecture-principles)
+  - [Components and Their Roles](#components-and-their-roles)
+    - [Entities (`src/domain/entities`):](#entities-srcdomainentities)
+    - [Repository Interfaces (`src/domain/interfaces`):](#repository-interfaces-srcdomaininterfaces)
+    - [Use Cases (`src/application/use-cases`):](#use-cases-srcapplicationuse-cases)
+    - [Repositories (`src/infrastructure/database`):](#repositories-srcinfrastructuredatabase)
+    - [Mappers (`src/infrastructure/mappers`):](#mappers-srcinfrastructuremappers)
+    - [DTOs (`src/application/dtos`):](#dtos-srcapplicationdtos)
+    - [How Everything Connects](#how-everything-connects)
   - [Contributing](#contributing)
     - [Steps to Contribute](#steps-to-contribute)
     - [Guidelines](#guidelines)
@@ -42,13 +50,9 @@ Welcome to the repository for the **Community Web Application**. This project is
 
 ## Technologies Used
 
-- Frontend:
+- Web:
   - [React](https://reactjs.org/) & [Next](https://nextjs.org)
   - [TailwindCSS](https://tailwindcss.com/)
-- Backend:
-  - [Node.js](https://nodejs.org/)
-  - [Express.js](https://expressjs.com/)
-  - [Prisma ORM](https://www.prisma.io/)
 - Database:
   - [PostgreSQL](https://www.postgresql.org/)
 - Authentication:
@@ -56,7 +60,6 @@ Welcome to the repository for the **Community Web Application**. This project is
 - API Documentation:
   - OpenAPI (Swagger)
 - Dev Tools:
-  - [Nodemon](https://nodemon.io/)
   - [ESLint](https://eslint.org/)
   - [Prettier](https://prettier.io/)
 
@@ -100,28 +103,6 @@ PORT=3000
 
 Replace `USER`, `PASSWORD`, `HOST`, `PORT`, and `DATABASE_NAME` with your PostgreSQL database credentials.
 
-### Database Setup
-
-1. **Initialize Prisma**
-
-   ```bash
-   npx prisma init
-   ```
-
-2. **Run Database Migrations**
-
-   ```bash
-   npx prisma migrate dev --name init
-   ```
-
-   This command will create the database tables as defined in the Prisma schema.
-
-3. **Generate Prisma Client**
-
-   ```bash
-   npx prisma generate
-   ```
-
 ### Running the Application
 
 **Development Mode**
@@ -153,9 +134,7 @@ For detailed information about the API endpoints, request/response formats, and 
 
 ## Database Schema
 
-The database schema is designed using PostgreSQL and managed via Prisma ORM.
-
-- **Schema File**: The Prisma schema is located at `prisma/schema.prisma`.
+The database schema is designed using PostgreSQL
 
 For an in-depth explanation of the database structure, entities, and relationships, refer to the [Database Schema Documentation](./docs/database.md)
 
@@ -167,7 +146,6 @@ For an in-depth explanation of the database structure, entities, and relationshi
 community-pro/
 ├── .husky/
 ├── docs/
-├── prisma/
 ├── public/
 ├── src/
 │   ├── app/
@@ -187,7 +165,7 @@ community-pro/
 │   ├── infraestructure/
 │   │   ├── database/
 │   │   └── mappers/
-│  	└──lib/
+│   └──lib/
 ├── .prettierrc
 ├── tailwind.config.ts
 ├── postcss.config.mjs
@@ -207,10 +185,8 @@ community-pro/
     - **`components/ui`**: Shadcn UI Components
   - **`domain/`**: Entities and Interfaces
   - **`infraestructure/`**: Logic related to database and mappers
-  - **`application/`**:  Use Cases related to business logic and DTOs
+  - **`application/`**: Use Cases related to business logic and DTOs
   - **`lib/`**: Utils
-  
-- **`prisma/`**: Contains the Prisma schema and migration files.
 - **`public/`**: Contains static assets.
 - **`docs/`**: Contains documentation files.
 
@@ -252,7 +228,7 @@ community-pro/
 
 - Implement the repository interfaces defined in the domain.
 - Handle the details of data persistence and retrieval.
-- **Example**: `PrismaConversationRepository`
+- **Example**: `VercelPostgresConversationRepository`
 
 #### Mappers (`src/infrastructure/mappers`):
 

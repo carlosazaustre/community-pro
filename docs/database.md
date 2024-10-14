@@ -1,21 +1,37 @@
 # Database Structure Documentation
 
-This documentation outlines the database schema for the web application, detailing the tables, entities, and relationships. The database is designed using PostgreSQL and managed with Prisma ORM.
+This documentation outlines the database schema for the web application, detailing the tables, entities, and relationships. The database is designed using PostgreSQL.
 
 ## Table of Contents
 
-- [Entity Relationship Diagram (ERD)](#entity-relationship-diagram-erd)
-- [Tables and Entities](#tables-and-entities)
-  - [1. Users](#1-users)
-  - [2. Conversations](#2-conversations)
-  - [3. Comments](#3-comments)
-  - [4. Topics](#4-topics)
-  - [5. Notifications](#5-notifications)
-  - [6. Password Reset Tokens](#6-password-reset-tokens)
-  - [7. User Activity](#7-user-activity)
-  - [8. Settings](#8-settings)
-- [Relationships](#relationships)
-- [Additional Notes](#additional-notes)
+- [Database Structure Documentation](#database-structure-documentation)
+  - [Table of Contents](#table-of-contents)
+  - [Entity Relationship Diagram (ERD)](#entity-relationship-diagram-erd)
+  - [Tables and Entities](#tables-and-entities)
+    - [1. Users](#1-users)
+    - [2. Conversations](#2-conversations)
+    - [3. Comments](#3-comments)
+    - [4. Topics](#4-topics)
+    - [5. Notifications](#5-notifications)
+    - [6. Password Reset Tokens](#6-password-reset-tokens)
+    - [7. User Activity](#7-user-activity)
+    - [8. Settings](#8-settings)
+  - [Relationships](#relationships)
+    - [Users and Conversations](#users-and-conversations)
+    - [Users and Comments](#users-and-comments)
+    - [Users and Notifications](#users-and-notifications)
+    - [Users and Password Reset Tokens](#users-and-password-reset-tokens)
+    - [Users and User Activity](#users-and-user-activity)
+    - [Conversations and Comments](#conversations-and-comments)
+    - [Conversations and Topics](#conversations-and-topics)
+    - [Conversations and Notifications](#conversations-and-notifications)
+    - [Comments and Notifications](#comments-and-notifications)
+    - [User Activity with Conversations and Comments](#user-activity-with-conversations-and-comments)
+  - [Additional Notes](#additional-notes)
+    - [Indexing](#indexing)
+    - [Data Integrity](#data-integrity)
+    - [Security Considerations](#security-considerations)
+    - [Scalability](#scalability)
 
 ## Entity Relationship Diagram (ERD)
 

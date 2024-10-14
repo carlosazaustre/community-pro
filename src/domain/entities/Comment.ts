@@ -1,5 +1,3 @@
-import { User } from './User';
-
 export interface Comment {
   id: number;
   content: string;
@@ -7,5 +5,8 @@ export interface Comment {
   updatedAt: Date;
   userId: number;
   conversationId: number;
-  user: User;
+  user: {
+    id: number;
+    username: string;
+  };
 }

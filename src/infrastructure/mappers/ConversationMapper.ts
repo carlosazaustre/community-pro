@@ -50,7 +50,7 @@ export class ConversationMapper {
     };
   }
 
-  private static toCommentDTO(comment: Comment): CommentDTO {
+  static toCommentDTO(comment: Comment): CommentDTO {
     return {
       id: comment.id,
       content: comment.content,
@@ -60,5 +60,21 @@ export class ConversationMapper {
         username: comment.user.username,
       },
     };
+  }
+
+  static toDTOList(
+    conversations: Conversation[],
+    users: User[],
+    topics: (Topic | null)[],
+    commentCounts: number[]
+  ): ConversationDTO[] {
+    return conversations.map((conversation, index) =>
+      this.toDTO(
+        conversation,
+        users[index],
+        topics[index],
+        commentCounts[index]
+      )
+    );
   }
 }
