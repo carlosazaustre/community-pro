@@ -78,25 +78,16 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const page = Number(searchParams.get('page')) || 1;
   const limit = Number(searchParams.get('limit')) || 10;
-  const topicId = searchParams.get('topicId')
-    ? Number(searchParams.get('topicId'))
-    : undefined;
+  const topicId = searchParams.get('topicId') ? Number(searchParams.get('topicId')) : undefined;
 
   try {
     const repository = new VercelPostgresConversationRepository();
     const useCase = new GetConversationsUseCase(repository);
-    const { conversations, totalPages } = await useCase.execute(
-      page,
-      limit,
-      topicId
-    );
+    const { conversations, totalPages } = await useCase.execute(page, limit, topicId);
 
     return NextResponse.json({ conversations, totalPages, currentPage: page });
   } catch (error) {
     console.error('Error fetching conversations:', error);
-    return NextResponse.json(
-      { error: 'Internal Server Error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

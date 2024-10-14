@@ -8,6 +8,7 @@ export interface ConversationDTO {
   user: {
     id: number;
     username: string;
+    fullName: string;
   };
   topic: {
     id: number;

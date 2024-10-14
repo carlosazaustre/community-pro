@@ -4,10 +4,10 @@ import { Conversation } from '@/domain/entities/Conversation';
 import { User } from '@/domain/entities/User';
 import { Topic } from '@/domain/entities/Topic';
 import { Comment } from '@/domain/entities/Comment';
+import { UserMapper } from '@/infrastructure/mappers/UserMapper';
+import { ConversationMapper } from '@/infrastructure/mappers/ConversationMapper';
 
-export class VercelPostgresConversationRepository
-  implements ConversationRepository
-{
+export class VercelPostgresConversationRepository implements ConversationRepository {
   /**
    * Retrieves a paginated list of conversations from the database.
    *
@@ -59,16 +59,7 @@ export class VercelPostgresConversationRepository
       sql.query(countQuery, values.slice(0, -2)), // Exclude LIMIT and OFFSET for count query
     ]);
 
-    const conversations = conversationsResult.rows.map((row) => ({
-      id: row.id,
-      title: row.title,
-      content: row.content,
-      createdAt: new Date(row.created_at),
-      updatedAt: new Date(row.updated_at),
-      isPinned: row.is_pinned,
-      userId: row.user_id,
-      topicId: row.topic_id,
-    }));
+    const conversations = conversationsResult.rows.map(ConversationMapper.toDomain);
 
     const totalItems = parseInt(countResult.rows[0].count, 10);
 
@@ -93,42 +84,29 @@ export class VercelPostgresConversationRepository
       throw new Error('Conversation not found');
     }
 
-    const row = rows[0];
-    return {
-      id: row.id,
-      title: row.title,
-      content: row.content,
-      createdAt: new Date(row.created_at),
-      updatedAt: new Date(row.updated_at),
-      isPinned: row.is_pinned,
-      userId: row.user_id,
-      topicId: row.topic_id,
-    };
+    return ConversationMapper.toDomain(rows[0]);
   }
 
   /**
    * Retrieves the user associated with a given conversation.
    *
    * @param conversationId - The ID of the conversation to retrieve the user for.
-   * @returns A promise that resolves to a User object containing the user's ID and username.
+   * @returns A promise that resolves to a User object containing all user details.
    * @throws An error if no user is found for the given conversation.
    */
   async getUserForConversation(conversationId: number): Promise<User> {
     const { rows } = await sql`
-      SELECT u.id, u.username
-      FROM users u
-      JOIN conversations c ON u.id = c.user_id
-      WHERE c.id = ${conversationId}
-    `;
+    SELECT u.id, u.full_name, u.username, u.email, u.password_hash, u.created_at, u.updated_at
+    FROM users u
+    JOIN conversations c ON u.id = c.user_id
+    WHERE c.id = ${conversationId}
+  `;
 
     if (rows.length === 0) {
       throw new Error('User not found for conversation');
     }
 
-    return {
-      id: rows[0].id,
-      username: rows[0].username,
-    };
+    return UserMapper.toDomain(rows[0]);
   }
 
   /**
@@ -161,9 +139,7 @@ export class VercelPostgresConversationRepository
    * @param conversationId - The unique identifier of the conversation.
    * @returns A promise that resolves to the number of comments for the given conversation.
    */
-  async getCommentCountForConversation(
-    conversationId: number
-  ): Promise<number> {
+  async getCommentCountForConversation(conversationId: number): Promise<number> {
     const { rows } = await sql`
       SELECT COUNT(*) as count
       FROM comments
@@ -199,6 +175,7 @@ export class VercelPostgresConversationRepository
       ORDER BY c.created_at ASC
     `;
 
+    // TODO: Create a CommentMapper
     return rows.map((row) => ({
       id: row.id,
       content: row.content,
