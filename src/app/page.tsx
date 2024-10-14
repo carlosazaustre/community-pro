@@ -1,11 +1,27 @@
-export default function Home() {
+// Page: /
+
+import ConversationFeedServer from '@/components/ConversationFeedServer';
+
+interface HomeProps {
+  searchParams: { page?: string; topicId?: string };
+}
+
+export default async function Home({ searchParams }: HomeProps) {
+  const page = Number(searchParams.page) || 1;
+  const limit = 10;
+  const topicId = searchParams.topicId
+    ? Number(searchParams.topicId)
+    : undefined;
+
   return (
-    <div>
-      <h1>Community Pro</h1>
-      <p>
-        El objetivo de esta comunidad es ayudarte en tu camino como
-        desarrollador web y elevar tus habilidades en programación.
-      </p>
+    <div className="flex flex-col lg:flex-row gap-8">
+      <main className="lg:w-2/3">
+        <h1 className="text-3xl font-bold text-gray-900 mb-6">
+          Community Feed
+        </h1>
+        <ConversationFeedServer page={page} limit={limit} topicId={topicId} />
+      </main>
+      <aside className="lg:w-1/3">Members Ranking</aside>
     </div>
   );
 }

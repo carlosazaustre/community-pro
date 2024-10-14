@@ -165,52 +165,114 @@ For an in-depth explanation of the database structure, entities, and relationshi
 
 ```plaintext
 community-pro/
-├── src/
-│   ├── components/
-│   │   ├── NavBar.jsx
-│   │   ├── PostCard.jsx
-│   │   ├── MembersRanking.jsx
-│   │   ├── RegistrationForm.jsx
-│   │   ├── LoginForm.jsx
-│   │   ├── PasswordRecoveryForm.jsx
-│   ├── pages/
-│   │   ├── MainScreen.jsx
-│   │   └── ...
-│   ├── controllers/
-│   ├── middlewares/
-│   ├── models/
-│   ├── routes/
-│   ├── services/
-│   ├── utils/
-│   ├── index.js
-│   └── app.js
-├── prisma/
-│   ├── schema.prisma
-│   └── migrations/
-├── public/
-│   └── index.html
+├── .husky/
 ├── docs/
-│   ├── api.md
-│   ├── database.md
-│   └── openapi.yaml
-├── .env
-├── .gitignore
+├── prisma/
+├── public/
+├── src/
+│   ├── app/
+│   │   ├── api/
+│   │   ├── fonts/
+│   │   ├── globals.css
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   ├── components/
+│   │   └── ui/
+│   ├── application/
+│   │   ├── dtos/
+│   │   └── use-cases/
+│   ├── domain/
+│   │   ├── entities/
+│   │   └── interfaces/
+│   ├── infraestructure/
+│   │   ├── database/
+│   │   └── mappers/
+│  	└──lib/
+├── .prettierrc
+├── tailwind.config.ts
+├── postcss.config.mjs
+├── components.json
+├── docker-compose.yml
+├── next-env.d.ts
+├── next.config.mjs
 ├── package.json
-├── README.md
-└── LICENSE
+├── .eslintrc.json
+├── .gitignore
+└── tsconfig.json
 ```
 
 - `src/`: Contains the application source code.
+  - **`/app`**: Next App Router logic for pages
   - **`components/`**: Reusable React components.
-  - **`pages/`**: Page-level components.
-  - **`controllers/`**: Request handlers for the API.
-  - **`routes/`**: API route definitions.
-  - **`models/`**: Data models and ORM schemas.
-  - **`services/`**: Business logic and service functions.
-  - **`utils/`**: Utility functions and helpers.
+    - **`components/ui`**: Shadcn UI Components
+  - **`domain/`**: Entities and Interfaces
+  - **`infraestructure/`**: Logic related to database and mappers
+  - **`application/`**:  Use Cases related to business logic and DTOs
+  - **`lib/`**: Utils
+  
 - **`prisma/`**: Contains the Prisma schema and migration files.
 - **`public/`**: Contains static assets.
 - **`docs/`**: Contains documentation files.
+
+---
+
+## Applied Clean Architecture principles
+
+- **Independence from Frameworks**: Our domain code and business logic do not depend on any external framework.
+
+- **Testability**: By separating responsibilities, we can test each component in isolation.
+
+- **Independence from the UI**: Our business logic can operate without a specific user interface.
+
+- **Independence from the Database**: Our domain is unaware of data persistence details.
+
+- **Independence from Any External Agency**: Our business core does not depend on anything external.
+
+## Components and Their Roles
+
+#### Entities (`src/domain/entities`):
+
+- Represent the application's business objects.
+- Contain the most general and high-level business rules.
+- **Example**: `Conversation`, `User`, `Topic`
+
+#### Repository Interfaces (`src/domain/interfaces`):
+
+- Define contracts for data access.
+- Allow the domain to specify how it wants to persist data without worrying about implementation details.
+- **Example**: `ConversationRepository`
+
+#### Use Cases (`src/application/use-cases`):
+
+- Contain application-specific business rules.
+- Orchestrate the flow of data to and from the entities.
+- **Example**: `GetConversationsUseCase`
+
+#### Repositories (`src/infrastructure/database`):
+
+- Implement the repository interfaces defined in the domain.
+- Handle the details of data persistence and retrieval.
+- **Example**: `PrismaConversationRepository`
+
+#### Mappers (`src/infrastructure/mappers`):
+
+- Transform data between domain representations and external ones (like DTOs).
+- Help maintain separation between the domain and external layers.
+- **Example**: `ConversationMapper`
+
+#### DTOs (`src/application/dtos`):
+
+- Data Transfer Objects that define how data communicates with the outside world.
+- Help decouple the internal representation of data from the external one.
+
+#### How Everything Connects
+
+- **Use Cases** are the central point. They implement the application-specific business logic.
+- **Use Cases** work with **Entities** that represent the core of the domain.
+- To access or persist data, **Use Cases** use **Repository Interfaces**.
+- Concrete **Repository Implementations** (like `PrismaConversationRepository`) provide the actual implementation of these interfaces.
+- **Mappers** are used to convert between domain **Entities** and **DTOs**, keeping the domain clean from external concerns.
+- The **Presentation Layer** (such as controllers or API handlers) uses **Use Cases** and works with **DTOs**.
 
 ---
 
@@ -260,7 +322,7 @@ We welcome contributions to improve this project!
 
 ### Guidelines
 
-- Follow the existing code style.
+- Follow the existing code style and architecture.
 - Write clear commit messages.
 - Update documentation if necessary.
 - Ensure that your code passes all tests and lints.
