@@ -1,10 +1,10 @@
 -- Insert sample users
-INSERT INTO users (username, email, password_hash, is_admin) VALUES
-('admin', 'admin@example.com', 'hashed_password', TRUE),
-('user1', 'user1@example.com', 'hashed_password', FALSE),
-('user2', 'user2@example.com', 'hashed_password', FALSE),
-('user3', 'user3@example.com', 'hashed_password', FALSE),
-('user4', 'user4@example.com', 'hashed_password', FALSE);
+INSERT INTO users (username, full_name, email, password_hash, is_admin) VALUES
+('admin', 'Admin Admin', 'admin@example.com', 'hashed_password', TRUE),
+('user1', 'User One', 'user1@example.com', 'hashed_password', FALSE),
+('user2', 'User Two', 'user2@example.com', 'hashed_password', FALSE),
+('user3', 'User Three', 'user3@example.com', 'hashed_password', FALSE),
+('user4', 'User Four', 'user4@example.com', 'hashed_password', FALSE);
 
 -- Insert sample topics
 INSERT INTO topics (name, description) VALUES
