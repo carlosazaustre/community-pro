@@ -18,16 +18,13 @@ export default function VerifyEmail() {
       }
 
       try {
-        console.log('Sending verification request...');
         const response = await fetch('/api/verify-email', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ token }),
         });
 
-        console.log('Response status:', response.status);
-        const data = await response.json();
-        console.log('Response data:', data);
+        // const data = await response.json();
 
         if (response.ok) {
           setStatus('success');

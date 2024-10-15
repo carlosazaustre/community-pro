@@ -84,18 +84,14 @@ const createUserUseCase = new CreateUserUseCase(userRepository, emailService);
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    console.log('Received signup request:', body); // Log de los datos recibidos
-
     const { fullName, username, email, password } = body;
 
-    console.log('Creating user...'); // Log antes de crear el usuario
     const user = await createUserUseCase.execute({
       fullName,
       username,
       email,
       password,
     });
-    console.log('User created successfully:', user); // Log después de crear el usuario
 
     return NextResponse.json({ message: 'User registered successfully', userId: user.id }, { status: 201 });
   } catch (error) {

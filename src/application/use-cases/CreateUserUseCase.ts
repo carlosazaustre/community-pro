@@ -31,38 +31,29 @@ export class CreateUserUseCase {
 
   async execute(userData: { fullName: string; username: string; email: string; password: string }): Promise<User> {
     try {
-      console.log('Checking for existing user...');
       const existingUser = await this.userRepository.getUserByEmail(userData.email);
       if (existingUser) {
         throw new Error('Email already exists');
       }
 
-      console.log('Hashing password...');
       const passwordHash = await bcrypt.hash(userData.password, 10);
-
-      console.log('Creating user in database...');
       const user = await this.userRepository.createUser({
         ...userData,
         passwordHash,
         emailVerified: false,
       });
 
-      console.log('Generating verification token...');
       const verificationToken = crypto.randomBytes(32).toString('hex');
       const tokenExpiresAt = new Date();
       tokenExpiresAt.setHours(tokenExpiresAt.getHours() + 24); // Token expires in 24 hours
 
-      console.log('Setting verification token...');
       await this.userRepository.setVerificationToken(user.id, verificationToken, tokenExpiresAt);
-
-      console.log('Sending verification email...');
       await this.emailService.sendVerificationEmail(user.email, verificationToken);
 
-      console.log('User creation process completed successfully');
       return user;
     } catch (error) {
       console.error('Error in CreateUserUseCase:', error);
-      throw error; // Re-lanza el error para que pueda ser manejado en la capa superior
+      throw error;
     }
   }
 }

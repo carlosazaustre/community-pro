@@ -19,7 +19,7 @@ export class EmailService {
     const verificationUrl = `${process.env.BASE_URL}/verify-email?token=${token}`;
 
     try {
-      console.log('Sending email to:', to);
+      // TODO: Better copy and layout for the email
       await this.transporter.sendMail({
         from: process.env.EMAIL_FROM,
         to,
@@ -29,10 +29,8 @@ export class EmailService {
         <a href="${verificationUrl}">${verificationUrl}</a>
       `,
       });
-      console.log('Email sent successfully');
     } catch (error) {
-      console.error('Error sending email:', error);
-      throw new Error('Failed to send verification email');
+      throw new Error('Failed to send verification email: ' + error);
     }
   }
 }
