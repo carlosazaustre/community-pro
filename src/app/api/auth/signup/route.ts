@@ -2,7 +2,7 @@
 
 import { NextResponse } from 'next/server';
 import { CreateUserUseCase } from '@/core/use-cases/CreateUserUseCase';
-import { EmailService } from '@/infrastructure/services/EmailService';
+import { EmailService } from '@/auth/services/EmailService';
 import { DatabaseUserRepository } from '@/infrastructure/database/DatabaseUserRepository';
 
 const userRepository = new DatabaseUserRepository();

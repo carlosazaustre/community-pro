@@ -65,11 +65,11 @@ function ConversationContent({ content, commentCount, topic }: ConversationConte
   );
 }
 
-interface ConversationDetailsClientProps {
+interface ConversationDetailsProps {
   conversationDetails: ConversationDetailsDTO;
 }
 
-export default function ConversationDetailsClient({ conversationDetails }: ConversationDetailsClientProps) {
+export default function ConversationDetails({ conversationDetails }: ConversationDetailsProps) {
   const handleCommentSubmit = (comment: string) => {
     /// TODO: add new comments
     console.log('Nuevo comentario:', comment);

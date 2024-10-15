@@ -1,6 +1,6 @@
 import { User } from '@/core/entities/User';
 import { UserRepository } from '@/core/interfaces/UserRepository';
-import { EmailService } from '@/infrastructure/services/EmailService';
+import { EmailService } from '@/auth/services/EmailService';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 
