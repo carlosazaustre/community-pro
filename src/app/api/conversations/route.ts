@@ -1,8 +1,8 @@
 // Route: /api/conversations
 
 import { NextRequest, NextResponse } from 'next/server';
-import { GetConversationsUseCase } from '@/application/use-cases/GetConversationsUseCase';
-import { VercelPostgresConversationRepository } from '@/infrastructure/database/VercelPostgresConversationRepository';
+import { GetConversationsUseCase } from '@/core/use-cases/GetConversationsUseCase';
+import { DatabaseConversationRepository } from '@/infrastructure/database/DatabaseConversationRepository';
 
 /**
  * @openapi
@@ -81,7 +81,7 @@ export async function GET(request: NextRequest) {
   const topicId = searchParams.get('topicId') ? Number(searchParams.get('topicId')) : undefined;
 
   try {
-    const repository = new VercelPostgresConversationRepository();
+    const repository = new DatabaseConversationRepository();
     const useCase = new GetConversationsUseCase(repository);
     const { conversations, totalPages } = await useCase.execute(page, limit, topicId);
 

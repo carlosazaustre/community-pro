@@ -1,6 +1,6 @@
 // Page: /
 
-import ConversationFeedServer from '@/components/ConversationFeedServer';
+import ConversationFeedServer from '@/conversations/components/ConversationFeedServer';
 
 interface HomeProps {
   searchParams: { page?: string; topicId?: string };

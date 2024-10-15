@@ -1,11 +1,11 @@
+import { AuthenticateUserUseCase } from '@/core/use-cases/AuthenticateUserUseCase';
+import { DatabaseUserRepository } from '@/infrastructure/database/DatabaseUserRepository';
 import type { NextAuthOptions, User } from 'next-auth';
 import type { JWT } from 'next-auth/jwt';
 import type { Session } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { VercelPostgresUserRepository } from '@/infrastructure/database/VercelPostgresUserRepository';
-import { AuthenticateUserUseCase } from '@/application/use-cases/AuthenticateUserUseCase';
 
-const userRepository = new VercelPostgresUserRepository();
+const userRepository = new DatabaseUserRepository();
 const authenticateUserUseCase = new AuthenticateUserUseCase(userRepository);
 
 export const authOptions: NextAuthOptions = {

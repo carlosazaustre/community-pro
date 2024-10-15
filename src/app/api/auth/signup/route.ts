@@ -1,11 +1,11 @@
 // Route: /api/auth/signup/
 
 import { NextResponse } from 'next/server';
-import { CreateUserUseCase } from '@/application/use-cases/CreateUserUseCase';
+import { CreateUserUseCase } from '@/core/use-cases/CreateUserUseCase';
 import { EmailService } from '@/infrastructure/services/EmailService';
-import { VercelPostgresUserRepository } from '@/infrastructure/database/VercelPostgresUserRepository';
+import { DatabaseUserRepository } from '@/infrastructure/database/DatabaseUserRepository';
 
-const userRepository = new VercelPostgresUserRepository();
+const userRepository = new DatabaseUserRepository();
 const emailService = new EmailService();
 const createUserUseCase = new CreateUserUseCase(userRepository, emailService);
 
@@ -95,7 +95,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ message: 'User registered successfully', userId: user.id }, { status: 201 });
   } catch (error) {
-    console.error('Error in signup:', error); // Log detallado del error
+    console.error('Error in signup:', error);
     if (error instanceof Error) {
       return NextResponse.json({ message: error.message }, { status: 400 });
     }
