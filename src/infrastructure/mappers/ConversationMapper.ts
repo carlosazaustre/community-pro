@@ -1,9 +1,9 @@
-import { User } from '@/domain/entities/User';
-import { Topic } from '@/domain/entities/Topic';
-import { Comment } from '@/domain/entities/Comment';
-import { Conversation } from '@/domain/entities/Conversation';
-import { ConversationDTO } from '@/application/dtos/ConversationDTO';
-import { ConversationDetailsDTO } from '@/application/dtos/ConversationDetailsDTO';
+import { User } from '@/core/entities/User';
+import { Topic } from '@/core/entities/Topic';
+import { Comment } from '@/core/entities/Comment';
+import { Conversation } from '@/core/entities/Conversation';
+import { ConversationDTO } from '@/core/dtos/ConversationDTO';
+import { ConversationDetailsDTO } from '@/core/dtos/ConversationDetailsDTO';
 
 export class ConversationMapper {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

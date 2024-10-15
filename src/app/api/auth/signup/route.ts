@@ -1,13 +1,7 @@
 // Route: /api/auth/signup/
 
 import { NextResponse } from 'next/server';
-import { CreateUserUseCase } from '@/application/use-cases/CreateUserUseCase';
-import { EmailService } from '@/infrastructure/services/EmailService';
-import { VercelPostgresUserRepository } from '@/infrastructure/database/VercelPostgresUserRepository';
-
-const userRepository = new VercelPostgresUserRepository();
-const emailService = new EmailService();
-const createUserUseCase = new CreateUserUseCase(userRepository, emailService);
+import { registerUser } from '@/auth/services/AuthService';
 
 /**
  * @openapi
@@ -72,21 +66,12 @@ const createUserUseCase = new CreateUserUseCase(userRepository, emailService);
  *                   example: An unexpected error occurred
  */
 
-/**
- * Handles the POST request for user signup.
- *
- * @param {Request} request - The incoming request object containing user signup data.
- * @returns {Promise<Response>} - A promise that resolves to a JSON response indicating the result of the signup process.
- *
- * @throws {Error} - If an error occurs during user creation, a JSON response with the error message and a 400 status code is returned.
- * @throws {Error} - If an unexpected error occurs, a JSON response with a generic error message and a 500 status code is returned.
- */
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { fullName, username, email, password } = body;
 
-    const user = await createUserUseCase.execute({
+    const user = await registerUser({
       fullName,
       username,
       email,
@@ -95,7 +80,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ message: 'User registered successfully', userId: user.id }, { status: 201 });
   } catch (error) {
-    console.error('Error in signup:', error); // Log detallado del error
+    console.error('Error in signup:', error);
     if (error instanceof Error) {
       return NextResponse.json({ message: error.message }, { status: 400 });
     }

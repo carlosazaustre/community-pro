@@ -1,15 +1,12 @@
+import { authenticateUser } from '@/auth/services/AuthService';
+import CredentialsProvider from 'next-auth/providers/credentials';
 import type { NextAuthOptions, User } from 'next-auth';
 import type { JWT } from 'next-auth/jwt';
 import type { Session } from 'next-auth';
-import CredentialsProvider from 'next-auth/providers/credentials';
-import { VercelPostgresUserRepository } from '@/infrastructure/database/VercelPostgresUserRepository';
-import { AuthenticateUserUseCase } from '@/application/use-cases/AuthenticateUserUseCase';
-
-const userRepository = new VercelPostgresUserRepository();
-const authenticateUserUseCase = new AuthenticateUserUseCase(userRepository);
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
+
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -22,7 +19,7 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        const user = await authenticateUserUseCase.execute(credentials.username, credentials.password);
+        const user = await authenticateUser(credentials);
 
         if (user) {
           return {
@@ -37,9 +34,11 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+
   pages: {
     signIn: '/auth/signin',
   },
+
   events: {
     async signOut(message) {
       console.log('User session closed:', message);
@@ -48,6 +47,7 @@ export const authOptions: NextAuthOptions = {
       console.log('User signed in:', message);
     },
   },
+
   callbacks: {
     async jwt({ token, user }: { token: JWT; user?: User }) {
       if (user) {
@@ -64,6 +64,7 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
+
   session: {
     strategy: 'jwt',
   },

@@ -1,5 +1,7 @@
 // Page: /conversation/:id
-import ConversationDetailsServer from '@/components/ConversationDetailsServer';
+
+import { getConversationDetails } from '@/conversations/services/ConversationService';
+import ConversationDetails from '@/conversations/components/ConversationDetails';
 
 interface ConversationDetailPageProps {
   params: { id: string };
@@ -7,6 +9,7 @@ interface ConversationDetailPageProps {
 
 export default async function ConversationDetailPage({ params }: ConversationDetailPageProps) {
   const conversationId = parseInt(params.id, 10);
+  const conversationDetails = await getConversationDetails({ conversationId });
 
-  return <ConversationDetailsServer conversationId={conversationId} />;
+  return <ConversationDetails conversationDetails={conversationDetails} />;
 }

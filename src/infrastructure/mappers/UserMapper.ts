@@ -1,5 +1,5 @@
-import { User } from '@/domain/entities/User';
-import { UserDTO } from '@/application/dtos/UserDTO';
+import { User } from '@/core/entities/User';
+import { UserDTO } from '@/core/dtos/UserDTO';
 
 export class UserMapper {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
