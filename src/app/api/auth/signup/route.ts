@@ -72,15 +72,6 @@ const createUserUseCase = new CreateUserUseCase(userRepository, emailService);
  *                   example: An unexpected error occurred
  */
 
-/**
- * Handles the POST request for user signup.
- *
- * @param {Request} request - The incoming request object containing user signup data.
- * @returns {Promise<Response>} - A promise that resolves to a JSON response indicating the result of the signup process.
- *
- * @throws {Error} - If an error occurs during user creation, a JSON response with the error message and a 400 status code is returned.
- * @throws {Error} - If an unexpected error occurs, a JSON response with a generic error message and a 500 status code is returned.
- */
 export async function POST(request: Request) {
   try {
     const body = await request.json();

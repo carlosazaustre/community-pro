@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import { ConversationDTO } from '@/core/dtos/ConversationDTO';
 import Pagination from '@/shared/components/Pagination';
-import ConversationCard from '@/conversations/components/ConversationCard';
+import ConversationCard from './ConversationCard';
 
-interface ConversationFeedClientProps {
+interface ConversationFeedProps {
   initialConversations: ConversationDTO[];
   initialPage: number;
   totalPages: number;
@@ -13,13 +13,13 @@ interface ConversationFeedClientProps {
   topicId?: number;
 }
 
-export default function ConversationFeedClient({
+export default function ConversationFeed({
   initialConversations,
   initialPage,
   totalPages: initialTotalPages,
   limit,
   topicId,
-}: ConversationFeedClientProps) {
+}: ConversationFeedProps) {
   const [conversations, setConversations] = useState(initialConversations);
   const [page, setPage] = useState(initialPage);
   const [totalPages, setTotalPages] = useState(initialTotalPages);
