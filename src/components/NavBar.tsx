@@ -1,15 +1,18 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { LogOut, Bell, Menu } from 'lucide-react';
+import { Bell, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar } from '@/components/ui/avatar';
+import LogoutButton from '@/components/auth/LogoutButton';
 
-const NavBar: React.FC = () => {
+export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { data: session } = useSession();
 
   return (
     <nav className="bg-white shadow">
@@ -23,61 +26,44 @@ const NavBar: React.FC = () => {
             </div>
           </div>
           <div className="hidden sm:ml-6 sm:flex sm:items-center">
-            <a
-              href="#"
-              className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-500"
-            >
+            <a href="#" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-500">
               Comunidad
             </a>
-            <a
-              href="#"
-              className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-500"
-            >
+            <a href="#" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-500">
               Miembros
             </a>
-            {isLoggedIn ? (
+            {session ? (
               <>
                 <Button variant="ghost" size="icon" className="ml-3">
                   <Bell size={20} />
                 </Button>
                 <div className="ml-3 relative">
-                  <Avatar>
+                  <Avatar className="h-8 w-8">
                     <Image
                       width={32}
                       height={32}
-                      src="/placeholder.svg"
-                      alt="User avatar"
+                      src={`https://avatar.vercel.sh/${session.user.username}`}
+                      alt={session.user.username}
+                      className="rounded-full"
+                      objectFit="cover"
                     />
                   </Avatar>
                 </div>
-                <Button
-                  onClick={() => setIsLoggedIn(!isLoggedIn)}
-                  variant="secondary"
-                  className="ml-3"
-                >
-                  <LogOut size={15} />
-                </Button>
+                <LogoutButton variant="icon" />
               </>
             ) : (
               <div className="ml-3 flex items-center">
-                <Button variant="ghost">Log in</Button>
-                <Button className="ml-2">Sign up</Button>
+                <Link href="/auth/signin">
+                  <Button variant="ghost">Log in</Button>
+                </Link>
+                <Link href="/auth/signup">
+                  <Button className="ml-2">Sign up</Button>
+                </Link>
               </div>
             )}
-            <Button
-              onClick={() => setIsLoggedIn(!isLoggedIn)}
-              variant="secondary"
-              className="ml-3"
-            >
-              Toggle Login
-            </Button>
           </div>
           <div className="-mr-2 flex items-center sm:hidden">
-            <Button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              variant="ghost"
-              size="icon"
-            >
+            <Button onClick={() => setIsMenuOpen(!isMenuOpen)} variant="ghost" size="icon">
               <Menu size={24} />
             </Button>
           </div>
@@ -100,7 +86,7 @@ const NavBar: React.FC = () => {
             </a>
           </div>
           <div className="pt-4 pb-3 border-t border-gray-200">
-            {isLoggedIn ? (
+            {session ? (
               <>
                 <div className="flex items-center px-4">
                   <div className="flex-shrink-0">
@@ -108,30 +94,30 @@ const NavBar: React.FC = () => {
                       <Image
                         width={40}
                         height={40}
-                        src="/placeholder.svg?height=40&width=40"
-                        alt="User avatar"
+                        src={`https://avatar.vercel.sh/${session.user.username}`}
+                        alt={session.user.username}
                       />
                     </Avatar>
                   </div>
                   <div className="ml-3">
-                    <div className="text-base font-medium text-gray-800">
-                      User Name
-                    </div>
-                    <div className="text-sm font-medium text-gray-500">
-                      user@example.com
-                    </div>
+                    <div className="text-base font-medium text-gray-800">{session.user.username}</div>
+                    <div className="text-sm font-medium text-gray-500">{session.user.email}</div>
                   </div>
                 </div>
-                <Button variant="ghost" className="w-full justify-center">
-                  Logout
-                </Button>
+                <div className="mt-3 space-y-1">
+                  <LogoutButton />
+                </div>
               </>
             ) : (
               <div className="mt-3 space-y-1">
-                <Button variant="ghost" className="w-full justify-center">
-                  Log in
-                </Button>
-                <Button className="w-full justify-center">Sign up</Button>
+                <Link href="/auth/signin">
+                  <Button variant="ghost" className="w-full justify-center">
+                    Log in
+                  </Button>
+                </Link>
+                <Link href="/auth/signup">
+                  <Button className="w-full justify-center">Sign up</Button>
+                </Link>
               </div>
             )}
           </div>
@@ -139,6 +125,4 @@ const NavBar: React.FC = () => {
       )}
     </nav>
   );
-};
-
-export default NavBar;
+}

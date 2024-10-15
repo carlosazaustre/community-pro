@@ -1,12 +1,6 @@
 import Link from 'next/link';
 import { ConversationDTO } from '@/application/dtos/ConversationDTO';
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { MessageSquare, Pin } from 'lucide-react';
@@ -15,9 +9,7 @@ interface ConversationCardProps {
   conversation: ConversationDTO;
 }
 
-export default function ConversationCard({
-  conversation,
-}: ConversationCardProps) {
+export default function ConversationCard({ conversation }: ConversationCardProps) {
   return (
     <Card>
       <Link href={`/conversation/${conversation.id}`}>
@@ -25,18 +17,12 @@ export default function ConversationCard({
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <Avatar>
-                <AvatarImage
-                  src={`https://avatar.vercel.sh/${conversation.user.username}`}
-                />
-                <AvatarFallback>
-                  {conversation.user.username.substring(0, 2).toUpperCase()}
-                </AvatarFallback>
+                <AvatarImage src={`https://avatar.vercel.sh/${conversation.user.username}`} />
+                <AvatarFallback>{conversation.user.username.substring(0, 2).toUpperCase()}</AvatarFallback>
               </Avatar>
               <div>
                 <CardTitle>{conversation.title}</CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  By {conversation.user.username}
-                </p>
+                <p className="text-sm text-muted-foreground">By {conversation.user.username}</p>
               </div>
             </div>
             {conversation.isPinned && (
@@ -53,13 +39,9 @@ export default function ConversationCard({
         <CardFooter className="flex justify-between">
           <div className="flex items-center space-x-2">
             <MessageSquare className="h-5 w-5 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground">
-              {conversation.commentCount} comments
-            </span>
+            <span className="text-sm text-muted-foreground">{conversation.commentCount} comments</span>
           </div>
-          {conversation.topic && (
-            <Badge variant="outline">{conversation.topic.name}</Badge>
-          )}
+          {conversation.topic && <Badge variant="outline">{conversation.topic.name}</Badge>}
         </CardFooter>
       </Link>
     </Card>

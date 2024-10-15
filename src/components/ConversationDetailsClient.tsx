@@ -14,23 +14,14 @@ interface ConversationHeaderProps {
   createdAt: string;
 }
 
-function ConversationHeader({
-  title,
-  username,
-  createdAt,
-}: ConversationHeaderProps) {
+function ConversationHeader({ title, username, createdAt }: ConversationHeaderProps) {
   return (
     <CardHeader>
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <Avatar>
-            <AvatarImage
-              src="/placeholder.svg?height=40&width=40"
-              alt={username}
-            />
-            <AvatarFallback>
-              {username.substring(0, 2).toUpperCase()}
-            </AvatarFallback>
+            <AvatarImage src="/placeholder.svg?height=40&width=40" alt={username} />
+            <AvatarFallback>{username.substring(0, 2).toUpperCase()}</AvatarFallback>
           </Avatar>
           <div>
             <CardTitle>{title}</CardTitle>
@@ -52,11 +43,7 @@ interface ConversationContentProps {
   topic?: { id: number; name: string } | null;
 }
 
-function ConversationContent({
-  content,
-  commentCount,
-  topic,
-}: ConversationContentProps) {
+function ConversationContent({ content, commentCount, topic }: ConversationContentProps) {
   return (
     <CardContent>
       <p className="mb-4">{content}</p>
@@ -82,9 +69,7 @@ interface ConversationDetailsClientProps {
   conversationDetails: ConversationDetailsDTO;
 }
 
-export default function ConversationDetailsClient({
-  conversationDetails,
-}: ConversationDetailsClientProps) {
+export default function ConversationDetailsClient({ conversationDetails }: ConversationDetailsClientProps) {
   const handleCommentSubmit = (comment: string) => {
     /// TODO: add new comments
     console.log('Nuevo comentario:', comment);
