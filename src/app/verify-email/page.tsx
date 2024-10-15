@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function VerifyEmail() {
+function VerifyEmailContent() {
   const [status, setStatus] = useState<'verifying' | 'success' | 'error'>('verifying');
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -61,5 +61,14 @@ export default function VerifyEmail() {
       <h1>Verification Failed</h1>
       <p>There was an error verifying your email. Please try again or contact support.</p>
     </div>
+  );
+}
+
+export default function VerifyEmailPage() {
+  // TODO: better markup on fallback
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <VerifyEmailContent />
+    </Suspense>
   );
 }
