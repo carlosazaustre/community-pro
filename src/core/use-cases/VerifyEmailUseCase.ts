@@ -6,10 +6,8 @@ import { UserRepository } from '@/core/interfaces/UserRepository';
  * @class VerifyEmailUseCase
  * @constructor
  * @param {UserRepository} userRepository - The repository to access user data.
- */
-
-/**
- * Executes the email verification process using the provided token.
+ *
+ * @method execute
  *
  * @param token - The verification token to validate the user's email.
  * @throws {Error} If the verification token is invalid or has expired.

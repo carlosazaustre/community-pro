@@ -11,7 +11,6 @@ import LogoutButton from '@/auth/components/LogoutButton';
 
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { data: session } = useSession();
 
   return (

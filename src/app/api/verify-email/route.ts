@@ -1,8 +1,7 @@
 // Route: /api/verify-email
 
 import { NextResponse } from 'next/server';
-import { VerifyEmailUseCase } from '@/core/use-cases/VerifyEmailUseCase';
-import { DatabaseUserRepository } from '@/infrastructure/database/DatabaseUserRepository';
+import { verifyEmail } from '@/auth/services/AuthService';
 
 /**
  * @openapi
@@ -62,10 +61,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: 'Token is required' }, { status: 400 });
     }
 
-    const userRepository = new DatabaseUserRepository();
-    const verifyEmailUseCase = new VerifyEmailUseCase(userRepository);
-
-    await verifyEmailUseCase.execute(token);
+    await verifyEmail(token);
 
     return NextResponse.json({ message: 'Email verified successfully' }, { status: 200 });
   } catch (error) {

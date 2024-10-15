@@ -13,10 +13,6 @@ interface AuthenticatedUser {
  * @class AuthenticateUserUseCase
  * @constructor
  * @param {UserRepository} userRepository - The repository to access user data.
- */
-
-/**
- * Executes the authentication process for a user.
  *
  * @method execute
  * @async

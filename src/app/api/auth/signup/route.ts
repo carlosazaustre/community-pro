@@ -1,13 +1,7 @@
 // Route: /api/auth/signup/
 
 import { NextResponse } from 'next/server';
-import { CreateUserUseCase } from '@/core/use-cases/CreateUserUseCase';
-import { EmailService } from '@/auth/services/EmailService';
-import { DatabaseUserRepository } from '@/infrastructure/database/DatabaseUserRepository';
-
-const userRepository = new DatabaseUserRepository();
-const emailService = new EmailService();
-const createUserUseCase = new CreateUserUseCase(userRepository, emailService);
+import { registerUser } from '@/auth/services/AuthService';
 
 /**
  * @openapi
@@ -77,7 +71,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { fullName, username, email, password } = body;
 
-    const user = await createUserUseCase.execute({
+    const user = await registerUser({
       fullName,
       username,
       email,

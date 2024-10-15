@@ -24,8 +24,6 @@ function VerifyEmailContent() {
           body: JSON.stringify({ token }),
         });
 
-        // const data = await response.json();
-
         if (response.ok) {
           setStatus('success');
         } else {

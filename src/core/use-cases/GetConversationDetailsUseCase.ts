@@ -8,10 +8,6 @@ import { ConversationDetailsDTO } from '@/core/dtos/ConversationDetailsDTO';
  * @class GetConversationDetailsUseCase
  * @constructor
  * @param {ConversationRepository} conversationRepository - The repository to access conversation data.
- */
-
-/**
- * Executes the use case to get the details of a conversation.
  *
  * @method execute
  * @async

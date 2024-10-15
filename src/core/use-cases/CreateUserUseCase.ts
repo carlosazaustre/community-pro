@@ -10,10 +10,6 @@ import crypto from 'crypto';
  * @class CreateUserUseCase
  * @constructor
  * @param {UserRepository} userRepository - The repository to manage user data.
- */
-
-/**
- * Executes the use case to create a new user.
  *
  * @method execute
  * @async
