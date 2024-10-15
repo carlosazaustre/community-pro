@@ -2,10 +2,12 @@
 
 import { NextResponse } from 'next/server';
 import { CreateUserUseCase } from '@/application/use-cases/CreateUserUseCase';
+import { EmailService } from '@/infrastructure/services/EmailService';
 import { VercelPostgresUserRepository } from '@/infrastructure/database/VercelPostgresUserRepository';
 
 const userRepository = new VercelPostgresUserRepository();
-const createUserUseCase = new CreateUserUseCase(userRepository);
+const emailService = new EmailService();
+const createUserUseCase = new CreateUserUseCase(userRepository, emailService);
 
 /**
  * @openapi
@@ -82,17 +84,22 @@ const createUserUseCase = new CreateUserUseCase(userRepository);
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+    console.log('Received signup request:', body); // Log de los datos recibidos
+
     const { fullName, username, email, password } = body;
 
+    console.log('Creating user...'); // Log antes de crear el usuario
     const user = await createUserUseCase.execute({
       fullName,
       username,
       email,
       password,
     });
+    console.log('User created successfully:', user); // Log después de crear el usuario
 
     return NextResponse.json({ message: 'User registered successfully', userId: user.id }, { status: 201 });
   } catch (error) {
+    console.error('Error in signup:', error); // Log detallado del error
     if (error instanceof Error) {
       return NextResponse.json({ message: error.message }, { status: 400 });
     }
