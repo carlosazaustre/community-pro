@@ -6,4 +6,7 @@ export interface User {
   passwordHash: string;
   createdAt: Date;
   updatedAt: Date;
+  emailVerified: boolean;
+  verificationToken?: string;
+  verificationTokenExpiresAt?: Date;
 }

@@ -20,8 +20,10 @@ CREATE TABLE users (
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     is_admin BOOLEAN NOT NULL DEFAULT FALSE,
     profile_picture VARCHAR(255),
-    bio TEXT
-
+    bio TEXT,
+    email_verified BOOLEAN DEFAULT FALSE,
+    verification_token VARCHAR(255),
+    verification_token_expires_at TIMESTAMP
 );
 
 -- Create topics table
@@ -101,3 +103,4 @@ CREATE INDEX idx_comments_conversation_id ON comments(conversation_id);
 CREATE INDEX idx_comments_user_id ON comments(user_id);
 CREATE INDEX idx_notifications_user_id ON notifications(user_id);
 CREATE INDEX idx_user_activity_user_id ON user_activity(user_id);
+CREATE INDEX idx_users_verification_token ON users(verification_token);

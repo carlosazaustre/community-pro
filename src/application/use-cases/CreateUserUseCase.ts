@@ -1,6 +1,8 @@
+import { User } from '@/domain/entities/User';
 import { UserRepository } from '@/domain/interfaces/UserRepository';
-import { User } from '../../domain/entities/User';
+import { EmailService } from '@/infrastructure/services/EmailService';
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 
 /**
  * Use case for creating a new user.
@@ -22,26 +24,36 @@ import bcrypt from 'bcrypt';
  * @throws {Error} If the username or email already exists.
  */
 export class CreateUserUseCase {
-  constructor(private userRepository: UserRepository) {}
+  constructor(
+    private userRepository: UserRepository,
+    private emailService: EmailService
+  ) {}
 
-  async execute(
-    userData: Omit<User, 'id' | 'createdAt' | 'updatedAt' | 'passwordHash'> & { password: string }
-  ): Promise<User> {
-    const existingUser = await this.userRepository.getUserByUsername(userData.username);
-    if (existingUser) {
-      throw new Error('Username already exists');
+  async execute(userData: { fullName: string; username: string; email: string; password: string }): Promise<User> {
+    try {
+      const existingUser = await this.userRepository.getUserByEmail(userData.email);
+      if (existingUser) {
+        throw new Error('Email already exists');
+      }
+
+      const passwordHash = await bcrypt.hash(userData.password, 10);
+      const user = await this.userRepository.createUser({
+        ...userData,
+        passwordHash,
+        emailVerified: false,
+      });
+
+      const verificationToken = crypto.randomBytes(32).toString('hex');
+      const tokenExpiresAt = new Date();
+      tokenExpiresAt.setHours(tokenExpiresAt.getHours() + 24); // Token expires in 24 hours
+
+      await this.userRepository.setVerificationToken(user.id, verificationToken, tokenExpiresAt);
+      await this.emailService.sendVerificationEmail(user.email, verificationToken);
+
+      return user;
+    } catch (error) {
+      console.error('Error in CreateUserUseCase:', error);
+      throw error;
     }
-
-    const existingEmail = await this.userRepository.getUserByEmail(userData.email);
-    if (existingEmail) {
-      throw new Error('Email already exists');
-    }
-
-    const passwordHash = await bcrypt.hash(userData.password, 10);
-
-    return this.userRepository.createUser({
-      ...userData,
-      passwordHash,
-    });
   }
 }
