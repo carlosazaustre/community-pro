@@ -19,7 +19,10 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        const user = await authenticateUser(credentials);
+        const user = await authenticateUser({
+          username: credentials.username,
+          password: credentials.password,
+        });
 
         if (user) {
           return {
@@ -52,14 +55,12 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }: { token: JWT; user?: User }) {
       if (user) {
         token.id = user.id;
-        token.username = user.username ?? user.name ?? 'unknown';
       }
       return token;
     },
     async session({ session, token }: { session: Session; token: JWT }) {
-      if (session.user) {
-        session.user.id = token.id as string;
-        session.user.username = token.username as string;
+      if (token && typeof token.id === 'number') {
+        session.user.id = token.id;
       }
       return session;
     },

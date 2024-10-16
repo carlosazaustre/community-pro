@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { ConversationDetailsDTO } from '@/core/dtos/ConversationDetailsDTO';
 import Comment from '@/conversations/components/Comment';
 import CommentForm from '@/conversations/components/CommentForm';
@@ -70,9 +71,11 @@ interface ConversationDetailsProps {
 }
 
 export default function ConversationDetails({ conversationDetails }: ConversationDetailsProps) {
-  const handleCommentSubmit = (comment: string) => {
-    /// TODO: add new comments
-    console.log('Nuevo comentario:', comment);
+  const [comments, setComments] = useState(conversationDetails.comments);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleAddComment = (newComment: any) => {
+    setComments((prevComments) => [...prevComments, newComment]);
   };
 
   return (
@@ -93,7 +96,7 @@ export default function ConversationDetails({ conversationDetails }: Conversatio
       <div className="space-y-4">
         <h2 className="text-2xl font-bold">Comentarios</h2>
         <div className="space-y-4">
-          {conversationDetails.comments.map((comment) => (
+          {comments.map((comment) => (
             <Comment
               key={comment.id}
               username={comment.user.username}
@@ -106,7 +109,7 @@ export default function ConversationDetails({ conversationDetails }: Conversatio
 
       <Separator />
 
-      <CommentForm onSubmit={handleCommentSubmit} />
+      <CommentForm conversationId={conversationDetails.id} onAddComment={handleAddComment} />
     </div>
   );
 }
