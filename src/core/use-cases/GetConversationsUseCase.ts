@@ -18,6 +18,7 @@ import { ConversationMapper } from '@/infrastructure/mappers/ConversationMapper'
  */
 export class GetConversationsUseCase {
   constructor(private conversationRepository: ConversationRepository) {}
+
   async execute(
     page: number = 1,
     limit: number = 20,

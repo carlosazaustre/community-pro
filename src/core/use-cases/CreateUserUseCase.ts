@@ -1,5 +1,6 @@
-import { User } from '@/core/entities/User';
+import { CreatedUserDTO } from '@/core/dtos/UserDTO';
 import { UserRepository } from '@/core/interfaces/UserRepository';
+import { UserMapper } from '@/infrastructure/mappers/UserMapper';
 import { EmailService } from '@/auth/services/EmailService';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
@@ -25,7 +26,12 @@ export class CreateUserUseCase {
     private emailService: EmailService
   ) {}
 
-  async execute(userData: { fullName: string; username: string; email: string; password: string }): Promise<User> {
+  async execute(userData: {
+    fullName: string;
+    username: string;
+    email: string;
+    password: string;
+  }): Promise<CreatedUserDTO> {
     try {
       const existingUser = await this.userRepository.getUserByEmail(userData.email);
       if (existingUser) {
@@ -46,7 +52,7 @@ export class CreateUserUseCase {
       await this.userRepository.setVerificationToken(user.id, verificationToken, tokenExpiresAt);
       await this.emailService.sendVerificationEmail(user.email, verificationToken);
 
-      return user;
+      return UserMapper.toCreatedDTO(user);
     } catch (error) {
       console.error('Error in CreateUserUseCase:', error);
       throw error;
