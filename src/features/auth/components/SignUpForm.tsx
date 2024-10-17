@@ -36,8 +36,10 @@ export default function SignUpForm() {
     if (!formData.email.trim()) newErrors.email = 'Email is required';
     else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid';
     if (!formData.password) newErrors.password = 'Password is required';
-    else if (formData.password.length < 6) newErrors.password = 'Password must be at least 6 characters';
-    if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
+    else if (formData.password.length < 6)
+      newErrors.password = 'Password must be at least 6 characters';
+    if (formData.password !== formData.confirmPassword)
+      newErrors.confirmPassword = 'Passwords do not match';
     return newErrors;
   };
 
@@ -68,7 +70,9 @@ export default function SignUpForm() {
 
         router.push('/auth/signin');
       } catch (error) {
-        setSubmitError(error instanceof Error ? error.message : 'An error occurred during registration');
+        setSubmitError(
+          error instanceof Error ? error.message : 'An error occurred during registration'
+        );
       } finally {
         setIsSubmitting(false);
       }
@@ -148,7 +152,9 @@ export default function SignUpForm() {
               onChange={handleChange}
               className={errors.confirmPassword ? 'border-red-500' : ''}
             />
-            {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>}
+            {errors.confirmPassword && (
+              <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>
+            )}
           </div>
           {submitError && (
             <Alert variant="destructive">

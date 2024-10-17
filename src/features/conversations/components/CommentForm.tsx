@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { Button } from '@/shared/components/ui/button';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { useToast } from '@/shared/hooks/use-toast';
+import DOMPurify from 'dompurify';
 
 interface CommentFormProps {
   onSubmit: (content: string) => Promise<void>;
@@ -30,6 +31,11 @@ export default function CommentForm({ onSubmit }: CommentFormProps) {
     setIsSubmitting(true);
 
     try {
+      const sanitizedContent = DOMPurify.sanitize(content, { ALLOWED_TAGS: [] });
+      if (sanitizedContent.trim() === '') {
+        throw new Error('El contenido del comentario no puede estar vacío.');
+      }
+
       await onSubmit(content);
       setContent('');
       toast({

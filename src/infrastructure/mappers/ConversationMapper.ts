@@ -1,7 +1,7 @@
-import { User } from '@/core/entities/User';
-import { Topic } from '@/core/entities/Topic';
-import { Comment } from '@/core/entities/Comment';
-import { Conversation } from '@/core/entities/Conversation';
+import { User } from '@/core/domain/entities/User';
+import { Topic } from '@/core/domain/entities/Topic';
+import { Comment } from '@/core/domain/entities/Comment';
+import { Conversation } from '@/core/domain/entities/Conversation';
 import { ConversationDTO } from '@/core/dtos/ConversationDTO';
 import { ConversationDetailsDTO } from '@/core/dtos/ConversationDetailsDTO';
 import { CommentMapper } from './CommentMapper';

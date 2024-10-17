@@ -1,7 +1,7 @@
 // Page: /
 
-import { getConversations } from '@/conversations/services/ConversationService';
-import ConversationFeed from '@/conversations/components/ConversationFeed';
+import { getConversations } from '@/features/conversations/services/ConversationService';
+import ConversationFeed from '@/features/conversations/components/ConversationFeed';
 
 interface HomeProps {
   searchParams: { page?: string; topicId?: string };

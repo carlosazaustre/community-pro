@@ -1,4 +1,4 @@
-import { User } from '@/core/entities/User';
+import { User } from '@/core/domain/entities/User';
 import { UserRepository } from '@/core/interfaces/UserRepository';
 import { UserMapper } from '@/infrastructure/mappers/UserMapper';
 import { sql } from '@vercel/postgres';
@@ -13,7 +13,10 @@ export class DatabaseUserRepository implements UserRepository {
    * @throws Will throw an error if the database operation fails.
    */
   async createUser(
-    user: Omit<User, 'id' | 'createdAt' | 'updatedAt' | 'verificationToken' | 'verificationTokenExpiresAt'>
+    user: Omit<
+      User,
+      'id' | 'createdAt' | 'updatedAt' | 'verificationToken' | 'verificationTokenExpiresAt'
+    >
   ): Promise<User> {
     const { rows } = await sql`
       INSERT INTO users (full_name, username, email, password_hash, email_verified)

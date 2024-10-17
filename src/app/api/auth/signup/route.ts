@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server';
-import { registerUser } from '@/auth/services/AuthService';
+import { registerUser } from '@/features/auth/services/AuthService';
 
 /**
  * @openapi

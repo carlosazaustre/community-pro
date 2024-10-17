@@ -1,11 +1,9 @@
 import { ConversationRepository } from '@/core/interfaces/ConversationRepository';
-import { User } from '@/core/entities/User';
-import { Conversation } from '@/core/entities/Conversation';
-import { Topic } from '@/core/entities/Topic';
-import { Comment } from '@/core/entities/Comment';
+import { User } from '@/core/domain/entities/User';
+import { Conversation } from '@/core/domain/entities/Conversation';
+import { Topic } from '@/core/domain/entities/Topic';
 import { UserMapper } from '@/infrastructure/mappers/UserMapper';
 import { ConversationMapper } from '@/infrastructure/mappers/ConversationMapper';
-import { CommentMapper } from '@/infrastructure/mappers/CommentMapper';
 import { sql } from '@vercel/postgres';
 
 export class DatabaseConversationRepository implements ConversationRepository {
@@ -132,50 +130,5 @@ export class DatabaseConversationRepository implements ConversationRepository {
       id: rows[0].id,
       name: rows[0].name,
     };
-  }
-
-  /**
-   * Retrieves the count of comments for a specific conversation.
-   *
-   * @param conversationId - The unique identifier of the conversation.
-   * @returns A promise that resolves to the number of comments for the given conversation.
-   */
-  async getCommentCountForConversation(conversationId: number): Promise<number> {
-    const { rows } = await sql`
-      SELECT COUNT(*) as count
-      FROM comments
-      WHERE conversation_id = ${conversationId}
-    `;
-
-    return parseInt(rows[0].count, 10);
-  }
-
-  /**
-   * Retrieves comments for a specific conversation.
-   *
-   * @param conversationId - The ID of the conversation for which to retrieve comments.
-   * @returns A promise that resolves to an array of comments.
-   *
-   * Each comment includes:
-   * - `id`: The comment's ID.
-   * - `content`: The content of the comment.
-   * - `createdAt`: The date and time when the comment was created.
-   * - `updatedAt`: The date and time when the comment was last updated.
-   * - `userId`: The ID of the user who made the comment.
-   * - `user`: An object containing the user's details:
-   *   - `id`: The user's ID.
-   *   - `username`: The user's username.
-   */
-  async getCommentsForConversation(conversationId: number): Promise<Comment[]> {
-    const { rows } = await sql`
-      SELECT c.id, c.content, c.created_at, c.updated_at, c.user_id,
-             u.username as user_username
-      FROM comments c
-      JOIN users u ON c.user_id = u.id
-      WHERE c.conversation_id = ${conversationId}
-      ORDER BY c.created_at ASC
-    `;
-
-    return rows.map(CommentMapper.toDomain);
   }
 }

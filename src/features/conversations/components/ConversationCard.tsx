@@ -18,7 +18,9 @@ export default function ConversationCard({ conversation }: ConversationCardProps
             <div className="flex items-center space-x-2">
               <Avatar>
                 <AvatarImage src={`https://avatar.vercel.sh/${conversation.user.username}`} />
-                <AvatarFallback>{conversation.user.username.substring(0, 2).toUpperCase()}</AvatarFallback>
+                <AvatarFallback>
+                  {conversation.user.username.substring(0, 2).toUpperCase()}
+                </AvatarFallback>
               </Avatar>
               <div>
                 <CardTitle>{conversation.title}</CardTitle>
@@ -39,7 +41,9 @@ export default function ConversationCard({ conversation }: ConversationCardProps
         <CardFooter className="flex justify-between">
           <div className="flex items-center space-x-2">
             <MessageSquare className="h-5 w-5 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground">{conversation.commentCount} comments</span>
+            <span className="text-sm text-muted-foreground">
+              {conversation.commentCount} comments
+            </span>
           </div>
           {conversation.topic && <Badge variant="outline">{conversation.topic.name}</Badge>}
         </CardFooter>

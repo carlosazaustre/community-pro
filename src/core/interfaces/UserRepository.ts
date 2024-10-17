@@ -1,8 +1,11 @@
-import { User } from '@/core/entities/User';
+import { User } from '@/core/domain/entities/User';
 
 export interface UserRepository {
   createUser(
-    user: Omit<User, 'id' | 'createdAt' | 'updatedAt' | 'verificationToken' | 'verificationTokenExpiresAt'>
+    user: Omit<
+      User,
+      'id' | 'createdAt' | 'updatedAt' | 'verificationToken' | 'verificationTokenExpiresAt'
+    >
   ): Promise<User>;
   getUserByUsername(username: string): Promise<User | null>;
   getUserByEmail(email: string): Promise<User | null>;
