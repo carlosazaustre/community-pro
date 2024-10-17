@@ -176,6 +176,8 @@ export class DatabaseConversationRepository implements ConversationRepository {
       ORDER BY c.created_at ASC
     `;
 
+    console.log('Filas de la consulta SQL', rows);
+
     return rows.map(CommentMapper.toDomain);
   }
 }
