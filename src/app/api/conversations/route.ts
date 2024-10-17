@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getConversations } from '@/conversations/services/ConversationService';
+import { getConversations } from '@/features/conversations/services/ConversationService';
 
 /**
  * @openapi

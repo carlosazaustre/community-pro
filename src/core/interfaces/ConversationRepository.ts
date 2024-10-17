@@ -1,6 +1,6 @@
-import { Conversation } from '@/core/entities/Conversation';
-import { User } from '@/core/entities/User';
-import { Topic } from '@/core/entities/Topic';
+import { Conversation } from '@/core/domain/entities/Conversation';
+import { User } from '@/core/domain/entities/User';
+import { Topic } from '@/core/domain/entities/Topic';
 
 export interface ConversationRepository {
   getConversations(

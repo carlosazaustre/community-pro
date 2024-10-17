@@ -1,7 +1,7 @@
 // Page: /conversation/:id
 
-import { getConversationDetails } from '@/conversations/services/ConversationService';
-import ConversationDetails from '@/conversations/components/ConversationDetails';
+import { getConversationDetails } from '@/features/conversations/services/ConversationService';
+import ConversationDetails from '@/features/conversations/components/ConversationDetails';
 
 interface ConversationDetailPageProps {
   params: { id: string };

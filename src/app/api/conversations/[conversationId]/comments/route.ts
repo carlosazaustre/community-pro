@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/options';
-import { addComment } from '@/conversations/services/CommentService';
+import { addComment } from '@/features/conversations/services/CommentService';
 
 /**
  * @openapi

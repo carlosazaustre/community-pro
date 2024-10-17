@@ -1,4 +1,4 @@
-import { Comment } from '@/core/entities/Comment';
+import { Comment } from '@/core/domain/entities/Comment';
 
 export interface CommentRepository {
   addComment(userId: number, conversationId: number, content: string): Promise<Comment>;

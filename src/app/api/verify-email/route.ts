@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server';
-import { verifyEmail } from '@/auth/services/AuthService';
+import { verifyEmail } from '@/features/auth/services/AuthService';
 
 /**
  * @openapi

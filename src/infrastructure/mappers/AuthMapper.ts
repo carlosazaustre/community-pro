@@ -1,4 +1,4 @@
-import { User } from '@/core/entities/User';
+import { User } from '@/core/domain/entities/User';
 import { AuthenticatedUserDTO } from '@/core/dtos/AuthenticatedUserDTO';
 
 export class AuthMapper {

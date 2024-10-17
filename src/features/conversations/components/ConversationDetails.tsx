@@ -3,9 +3,9 @@
 import { useEffect } from 'react';
 import { ConversationDetailsDTO } from '@/core/dtos/ConversationDetailsDTO';
 import { CommentDTO } from '@/core/dtos/CommentDTO';
-import Comment from '@/conversations/components/Comment';
-import CommentForm from '@/conversations/components/CommentForm';
-import { useComments } from '@/conversations/hooks/useComments';
+import Comment from '@/features/conversations/components/Comment';
+import CommentForm from '@/features/conversations/components/CommentForm';
+import { useComments } from '@/features/conversations/hooks/useComments';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import { Separator } from '@/shared/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';

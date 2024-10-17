@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { Bell, Menu } from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
 import { Avatar } from '@/shared/components/ui/avatar';
-import LogoutButton from '@/auth/components/LogoutButton';
+import LogoutButton from '@/features/auth/components/LogoutButton';
 
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

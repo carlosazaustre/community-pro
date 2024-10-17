@@ -1,7 +1,7 @@
 import { ConversationRepository } from '@/core/interfaces/ConversationRepository';
-import { User } from '@/core/entities/User';
-import { Conversation } from '@/core/entities/Conversation';
-import { Topic } from '@/core/entities/Topic';
+import { User } from '@/core/domain/entities/User';
+import { Conversation } from '@/core/domain/entities/Conversation';
+import { Topic } from '@/core/domain/entities/Topic';
 import { UserMapper } from '@/infrastructure/mappers/UserMapper';
 import { ConversationMapper } from '@/infrastructure/mappers/ConversationMapper';
 import { sql } from '@vercel/postgres';

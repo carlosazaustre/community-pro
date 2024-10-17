@@ -1,5 +1,5 @@
 import { CommentRepository } from '@/core/interfaces/CommentRepository';
-import { Comment } from '@/core/entities/Comment';
+import { Comment } from '@/core/domain/entities/Comment';
 import { CommentMapper } from '@/infrastructure/mappers/CommentMapper';
 import { CommentRow } from './types';
 import { executeQuery } from './db';

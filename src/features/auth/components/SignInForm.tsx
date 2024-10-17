@@ -106,7 +106,9 @@ export default function LoginForm() {
                 id="rememberMe"
                 name="rememberMe"
                 checked={formData.rememberMe}
-                onCheckedChange={(checked) => setFormData((prev) => ({ ...prev, rememberMe: checked as boolean }))}
+                onCheckedChange={(checked) =>
+                  setFormData((prev) => ({ ...prev, rememberMe: checked as boolean }))
+                }
               />
               <Label htmlFor="rememberMe" className="ml-2 text-sm text-gray-600">
                 Remember Me

@@ -1,4 +1,4 @@
-import { Comment } from '@/core/entities/Comment';
+import { Comment } from '@/core/domain/entities/Comment';
 import { CommentRow } from '@/infrastructure/database/types';
 import { CommentDTO } from '@/core/dtos/CommentDTO';
 

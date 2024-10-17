@@ -2,7 +2,7 @@ import { AuthenticateUserUseCase } from '@/core/use-cases/AuthenticateUserUseCas
 import { CreateUserUseCase } from '@/core/use-cases/CreateUserUseCase';
 import { VerifyEmailUseCase } from '@/core/use-cases/VerifyEmailUseCase';
 import { DatabaseUserRepository } from '@/infrastructure/database/DatabaseUserRepository';
-import { EmailService } from '@/auth/services/EmailService';
+import { EmailService } from '@/features/auth/services/EmailService';
 
 const emailService = new EmailService();
 const userRepository = new DatabaseUserRepository();

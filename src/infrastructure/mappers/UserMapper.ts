@@ -1,4 +1,4 @@
-import { User } from '@/core/entities/User';
+import { User } from '@/core/domain/entities/User';
 import { UserDTO } from '@/core/dtos/UserDTO';
 import { CreatedUserDTO } from '@/core/dtos/UserDTO';
 
