@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { verifyEmail } from '@/auth/services/AuthService';
 
 /**
@@ -50,7 +50,7 @@ import { verifyEmail } from '@/auth/services/AuthService';
  *                   type: string
  *                   example: "An unexpected error occurred"
  */
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { token } = body;

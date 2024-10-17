@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { registerUser } from '@/auth/services/AuthService';
 
 /**
@@ -64,7 +64,7 @@ import { registerUser } from '@/auth/services/AuthService';
  *                   example: An unexpected error occurred
  */
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { fullName, username, email, password } = body;

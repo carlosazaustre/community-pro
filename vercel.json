@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "buildCommand": "next build",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
+  "routes": [
+    {
+      "src": "/api/sse",
+      "dest": "/api/sse.js"
+    }
+  ]
+}

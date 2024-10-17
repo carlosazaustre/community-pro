@@ -1,13 +1,15 @@
 'use client';
 
-import { useState } from 'react';
 import { ConversationDetailsDTO } from '@/core/dtos/ConversationDetailsDTO';
+import { CommentDTO } from '@/core/dtos/CommentDTO';
 import Comment from '@/conversations/components/Comment';
 import CommentForm from '@/conversations/components/CommentForm';
-import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
+import { useComments } from '@/conversations/hooks/useComments';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import { Separator } from '@/shared/components/ui/separator';
+import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
 import { CalendarDays, MessageCircle, Tag } from 'lucide-react';
+import { useToast } from '@/shared/hooks/use-toast';
 
 interface ConversationHeaderProps {
   title: string;
@@ -71,11 +73,22 @@ interface ConversationDetailsProps {
 }
 
 export default function ConversationDetails({ conversationDetails }: ConversationDetailsProps) {
-  const [comments, setComments] = useState(conversationDetails.comments);
+  const { comments, addComment } = useComments(
+    conversationDetails.comments as CommentDTO[],
+    conversationDetails.id
+  );
+  const { toast } = useToast();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleAddComment = (newComment: any) => {
-    setComments((prevComments) => [...prevComments, newComment]);
+  const handleAddComment = async (content: string) => {
+    try {
+      await addComment(content);
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Fallo al añadir el comentario',
+        variant: 'destructive',
+      });
+    }
   };
 
   return (
@@ -99,7 +112,7 @@ export default function ConversationDetails({ conversationDetails }: Conversatio
           {comments.map((comment) => (
             <Comment
               key={comment.id}
-              username={comment.user.username}
+              username={comment.user.username || 'Anónimo'}
               content={comment.content}
               createdAt={comment.createdAt}
             />
@@ -109,7 +122,7 @@ export default function ConversationDetails({ conversationDetails }: Conversatio
 
       <Separator />
 
-      <CommentForm conversationId={conversationDetails.id} onAddComment={handleAddComment} />
+      <CommentForm onSubmit={handleAddComment} />
     </div>
   );
 }

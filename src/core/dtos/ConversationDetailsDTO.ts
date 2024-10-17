@@ -1,14 +1,5 @@
 import { ConversationDTO } from './ConversationDTO';
-
-export interface CommentDTO {
-  id: number;
-  content: string;
-  createdAt: string;
-  user: {
-    id: number;
-    username: string;
-  };
-}
+import { CommentDTO } from './CommentDTO';
 
 export interface ConversationDetailsDTO extends ConversationDTO {
   comments: CommentDTO[];

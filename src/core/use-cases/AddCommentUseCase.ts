@@ -38,6 +38,6 @@ export class AddCommentUseCase {
 
     const comment = await this.commentRepository.addComment(userId, conversationId, content);
 
-    return CommentMapper.toDTO(comment, user);
+    return CommentMapper.toDTO(comment);
   }
 }
