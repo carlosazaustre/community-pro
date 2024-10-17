@@ -1,12 +1,12 @@
 {
   "version": 2,
   "buildCommand": "next build",
-  "devCommand": "next dev",
   "outputDirectory": ".next",
   "framework": "nextjs",
-  "functions": {
-    "api/sse/route.ts": {
-      "runtime": "edge"
+  "routes": [
+    {
+      "src": "/api/sse",
+      "dest": "/api/sse.js"
     }
-  }
+  ]
 }
