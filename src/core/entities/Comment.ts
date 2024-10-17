@@ -1,11 +1,9 @@
-import { User } from './User';
-
 export interface Comment {
   id: number;
   content: string;
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt: Date | null;
   userId: number;
   conversationId: number;
-  user: Partial<User>;
+  username?: string;
 }

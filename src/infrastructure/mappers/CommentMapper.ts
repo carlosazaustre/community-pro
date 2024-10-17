@@ -7,11 +7,12 @@ export class CommentMapper {
       id: comment.id,
       content: comment.content,
       createdAt: comment.createdAt.toISOString(),
+      updatedAt: comment.updatedAt?.toISOString() || null,
       userId: comment.userId,
       conversationId: comment.conversationId,
       user: {
-        id: comment.user.id!,
-        username: comment.user.username || 'Usuario Anónimo',
+        id: comment.userId,
+        username: comment.username || 'Usuario Anónimo',
       },
     };
   }
@@ -25,13 +26,7 @@ export class CommentMapper {
       updatedAt: new Date(row.updated_at),
       userId: row.user_id,
       conversationId: row.conversation_id,
-      user: {
-        id: row.user_id,
-        username: row.username || row.user_username || 'Usuario Anónimo',
-        fullName: row.full_name || '',
-        email: row.email || '',
-        createdAt: row.user_created_at ? new Date(row.user_created_at) : new Date(),
-      },
+      username: row.user_username,
     };
   }
 }

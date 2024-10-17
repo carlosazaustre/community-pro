@@ -2,11 +2,10 @@ import { ConversationRepository } from '@/core/interfaces/ConversationRepository
 import { User } from '@/core/entities/User';
 import { Conversation } from '@/core/entities/Conversation';
 import { Topic } from '@/core/entities/Topic';
-import { Comment } from '@/core/entities/Comment';
 import { UserMapper } from '@/infrastructure/mappers/UserMapper';
 import { ConversationMapper } from '@/infrastructure/mappers/ConversationMapper';
-import { CommentMapper } from '@/infrastructure/mappers/CommentMapper';
 import { sql } from '@vercel/postgres';
+import { executeQuery } from './db';
 
 export class DatabaseConversationRepository implements ConversationRepository {
   /**
@@ -166,18 +165,31 @@ export class DatabaseConversationRepository implements ConversationRepository {
    *   - `id`: The user's ID.
    *   - `username`: The user's username.
    */
-  async getCommentsForConversation(conversationId: number): Promise<Comment[]> {
-    const { rows } = await sql`
-      SELECT c.id, c.content, c.created_at, c.updated_at, c.user_id,
-             u.username as user_username
-      FROM comments c
-      JOIN users u ON c.user_id = u.id
-      WHERE c.conversation_id = ${conversationId}
-      ORDER BY c.created_at ASC
-    `;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async getCommentsForConversation(conversationId: number): Promise<any> {
+    const query = `
+        SELECT c.id, c.content, c.created_at, c.updated_at, c.user_id,
+               u.username as user_username
+        FROM comments c
+        LEFT JOIN users u ON c.user_id = u.id
+        WHERE c.conversation_id = $1
+        ORDER BY c.created_at ASC
+      `;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const rows = await executeQuery<any>(query, [conversationId]);
 
     console.log('Filas de la consulta SQL', rows);
 
-    return rows.map(CommentMapper.toDomain);
+    return rows.map((row) => ({
+      id: row.id,
+      content: row.content,
+      createdAt: new Date(row.created_at),
+      updatedAt: row.updated_at ? new Date(row.updated_at) : null,
+      userId: row.user_id,
+      username: row.user_username,
+      conversationId,
+    }));
   }
 }
