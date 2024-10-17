@@ -100,6 +100,15 @@ export async function POST(
       content,
     });
 
+    // Send SSE Event
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const connections = (global as any).connections;
+    if (connections && connections[params.conversationId]) {
+      connections[params.conversationId].forEach((sendEvent: (data: string) => void) => {
+        sendEvent(JSON.stringify(comment));
+      });
+    }
+
     return NextResponse.json(comment);
   } catch (error) {
     console.error('Error adding comment:', error);

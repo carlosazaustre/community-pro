@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ConversationDetailsDTO } from '@/core/dtos/ConversationDetailsDTO';
 import Comment from '@/conversations/components/Comment';
 import CommentForm from '@/conversations/components/CommentForm';
@@ -74,9 +74,36 @@ export default function ConversationDetails({ conversationDetails }: Conversatio
   const [comments, setComments] = useState(conversationDetails.comments);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleAddComment = (newComment: any) => {
-    setComments((prevComments) => [...prevComments, newComment]);
-  };
+  const addComment = useCallback((newComment: any) => {
+    setComments((prevComments) => {
+      // Check if the comment already exists to prevent duplicates
+      const commentExists = prevComments.some((comment) => comment.id === newComment.id);
+      if (commentExists) {
+        return prevComments;
+      }
+      return [...prevComments, newComment];
+    });
+  }, []);
+
+  useEffect(() => {
+    const eventSource = new EventSource(`/api/sse?conversationId=${conversationDetails.id}`);
+
+    eventSource.onmessage = (event) => {
+      if (event.data !== 'ping') {
+        const newComment = JSON.parse(event.data);
+        addComment(newComment);
+      }
+    };
+
+    eventSource.onerror = (error) => {
+      console.error('SSE error:', error);
+      eventSource.close();
+    };
+
+    return () => {
+      eventSource.close();
+    };
+  }, [conversationDetails.id, addComment]);
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-10">
@@ -109,7 +136,7 @@ export default function ConversationDetails({ conversationDetails }: Conversatio
 
       <Separator />
 
-      <CommentForm conversationId={conversationDetails.id} onAddComment={handleAddComment} />
+      <CommentForm conversationId={conversationDetails.id} onAddComment={addComment} />
     </div>
   );
 }
