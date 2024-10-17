@@ -5,7 +5,6 @@ import { Topic } from '@/core/entities/Topic';
 import { UserMapper } from '@/infrastructure/mappers/UserMapper';
 import { ConversationMapper } from '@/infrastructure/mappers/ConversationMapper';
 import { sql } from '@vercel/postgres';
-import { executeQuery } from './db';
 
 export class DatabaseConversationRepository implements ConversationRepository {
   /**
@@ -131,65 +130,5 @@ export class DatabaseConversationRepository implements ConversationRepository {
       id: rows[0].id,
       name: rows[0].name,
     };
-  }
-
-  /**
-   * Retrieves the count of comments for a specific conversation.
-   *
-   * @param conversationId - The unique identifier of the conversation.
-   * @returns A promise that resolves to the number of comments for the given conversation.
-   */
-  async getCommentCountForConversation(conversationId: number): Promise<number> {
-    const { rows } = await sql`
-      SELECT COUNT(*) as count
-      FROM comments
-      WHERE conversation_id = ${conversationId}
-    `;
-
-    return parseInt(rows[0].count, 10);
-  }
-
-  /**
-   * Retrieves comments for a specific conversation.
-   *
-   * @param conversationId - The ID of the conversation for which to retrieve comments.
-   * @returns A promise that resolves to an array of comments.
-   *
-   * Each comment includes:
-   * - `id`: The comment's ID.
-   * - `content`: The content of the comment.
-   * - `createdAt`: The date and time when the comment was created.
-   * - `updatedAt`: The date and time when the comment was last updated.
-   * - `userId`: The ID of the user who made the comment.
-   * - `user`: An object containing the user's details:
-   *   - `id`: The user's ID.
-   *   - `username`: The user's username.
-   */
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async getCommentsForConversation(conversationId: number): Promise<any> {
-    const query = `
-        SELECT c.id, c.content, c.created_at, c.updated_at, c.user_id,
-               u.username as user_username
-        FROM comments c
-        LEFT JOIN users u ON c.user_id = u.id
-        WHERE c.conversation_id = $1
-        ORDER BY c.created_at ASC
-      `;
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const rows = await executeQuery<any>(query, [conversationId]);
-
-    console.log('Filas de la consulta SQL', rows);
-
-    return rows.map((row) => ({
-      id: row.id,
-      content: row.content,
-      createdAt: new Date(row.created_at),
-      updatedAt: row.updated_at ? new Date(row.updated_at) : null,
-      userId: row.user_id,
-      username: row.user_username,
-      conversationId,
-    }));
   }
 }

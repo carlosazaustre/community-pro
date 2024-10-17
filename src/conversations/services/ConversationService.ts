@@ -1,12 +1,20 @@
 import { DatabaseConversationRepository } from '@/infrastructure/database/DatabaseConversationRepository';
+import { DatabaseCommentRepository } from '@/infrastructure/database/DatabaseCommentRepository';
 import { ConversationDTO } from '@/core/dtos/ConversationDTO';
 import { ConversationDetailsDTO } from '@/core/dtos/ConversationDetailsDTO';
 import { GetConversationsUseCase } from '@/core/use-cases/GetConversationsUseCase';
 import { GetConversationDetailsUseCase } from '@/core/use-cases/GetConversationDetailsUseCase';
 
-const repository = new DatabaseConversationRepository();
-const getConversationsUseCase = new GetConversationsUseCase(repository);
-const getConversationDetailsUseCase = new GetConversationDetailsUseCase(repository);
+const conversationRepository = new DatabaseConversationRepository();
+const commentRepository = new DatabaseCommentRepository();
+const getConversationsUseCase = new GetConversationsUseCase(
+  conversationRepository,
+  commentRepository
+);
+const getConversationDetailsUseCase = new GetConversationDetailsUseCase(
+  conversationRepository,
+  commentRepository
+);
 
 /**
  * Retrieves a paginated list of conversations based on the provided parameters.

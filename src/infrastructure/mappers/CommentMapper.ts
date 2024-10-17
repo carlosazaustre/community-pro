@@ -1,4 +1,5 @@
 import { Comment } from '@/core/entities/Comment';
+import { CommentRow } from '@/infrastructure/database/types';
 import { CommentDTO } from '@/core/dtos/CommentDTO';
 
 export class CommentMapper {
@@ -18,15 +19,15 @@ export class CommentMapper {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static toDomain(row: any): Comment {
+  static toDomain(row: CommentRow, conversationId: number): Comment {
     return {
       id: row.id,
       content: row.content,
       createdAt: new Date(row.created_at),
-      updatedAt: new Date(row.updated_at),
+      updatedAt: row.updated_at ? new Date(row.updated_at) : null,
       userId: row.user_id,
-      conversationId: row.conversation_id,
       username: row.user_username,
+      conversationId,
     };
   }
 }

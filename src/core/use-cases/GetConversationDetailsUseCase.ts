@@ -1,4 +1,5 @@
 import { ConversationRepository } from '@/core/interfaces/ConversationRepository';
+import { CommentRepository } from '@/core/interfaces/CommentRepository';
 import { ConversationMapper } from '@/infrastructure/mappers/ConversationMapper';
 import { ConversationDetailsDTO } from '@/core/dtos/ConversationDetailsDTO';
 
@@ -17,7 +18,10 @@ import { ConversationDetailsDTO } from '@/core/dtos/ConversationDetailsDTO';
  * @throws {Error} If the user for the conversation is not found.
  */
 export class GetConversationDetailsUseCase {
-  constructor(private conversationRepository: ConversationRepository) {}
+  constructor(
+    private conversationRepository: ConversationRepository,
+    private commentRepository: CommentRepository
+  ) {}
 
   async execute(conversationId: number): Promise<ConversationDetailsDTO> {
     console.info(`Fetching details for conversation ${conversationId}`);
@@ -26,7 +30,7 @@ export class GetConversationDetailsUseCase {
       this.conversationRepository.getConversationDetails(conversationId),
       this.conversationRepository.getUserForConversation(conversationId),
       this.conversationRepository.getTopicForConversation(conversationId),
-      this.conversationRepository.getCommentsForConversation(conversationId),
+      this.commentRepository.getCommentsForConversation(conversationId),
     ]);
 
     if (!conversation) {
