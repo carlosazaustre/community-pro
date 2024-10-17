@@ -4,6 +4,7 @@ import { Comment } from '@/core/entities/Comment';
 import { Conversation } from '@/core/entities/Conversation';
 import { ConversationDTO } from '@/core/dtos/ConversationDTO';
 import { ConversationDetailsDTO } from '@/core/dtos/ConversationDetailsDTO';
+import { CommentMapper } from './CommentMapper';
 
 export class ConversationMapper {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -48,7 +49,12 @@ export class ConversationMapper {
     };
   }
 
-  static toDTO(conversation: Conversation, user: User, topic: Topic | null, commentCount: number): ConversationDTO {
+  static toDTO(
+    conversation: Conversation,
+    user: User,
+    topic: Topic | null,
+    commentCount: number
+  ): ConversationDTO {
     return this._toBaseDTO(conversation, user, topic, commentCount);
   }
 
@@ -61,16 +67,7 @@ export class ConversationMapper {
   ): ConversationDetailsDTO {
     return {
       ...this._toBaseDTO(conversation, user, topic, commentCount),
-      comments: comments.map((comment) => ({
-        id: comment.id,
-        content: comment.content,
-        createdAt: comment.createdAt.toISOString(),
-        updatedAt: comment.updatedAt.toISOString(),
-        user: {
-          id: comment.user.id,
-          username: comment.user.username,
-        },
-      })),
+      comments: comments.map((comment) => CommentMapper.toDTO(comment)),
     };
   }
 }

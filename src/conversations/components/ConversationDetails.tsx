@@ -1,13 +1,15 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
 import { ConversationDetailsDTO } from '@/core/dtos/ConversationDetailsDTO';
+import { CommentDTO } from '@/core/dtos/CommentDTO';
 import Comment from '@/conversations/components/Comment';
 import CommentForm from '@/conversations/components/CommentForm';
-import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
+import { useComments } from '@/conversations/hooks/useComments';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import { Separator } from '@/shared/components/ui/separator';
+import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
 import { CalendarDays, MessageCircle, Tag } from 'lucide-react';
+import { useToast } from '@/shared/hooks/use-toast';
 
 interface ConversationHeaderProps {
   title: string;
@@ -71,39 +73,23 @@ interface ConversationDetailsProps {
 }
 
 export default function ConversationDetails({ conversationDetails }: ConversationDetailsProps) {
-  const [comments, setComments] = useState(conversationDetails.comments);
+  const { comments, addComment } = useComments(
+    conversationDetails.comments as CommentDTO[],
+    conversationDetails.id
+  );
+  const { toast } = useToast();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const addComment = useCallback((newComment: any) => {
-    setComments((prevComments) => {
-      // Check if the comment already exists to prevent duplicates
-      const commentExists = prevComments.some((comment) => comment.id === newComment.id);
-      if (commentExists) {
-        return prevComments;
-      }
-      return [...prevComments, newComment];
-    });
-  }, []);
-
-  useEffect(() => {
-    const eventSource = new EventSource(`/api/sse?conversationId=${conversationDetails.id}`);
-
-    eventSource.onmessage = (event) => {
-      if (event.data !== 'ping') {
-        const newComment = JSON.parse(event.data);
-        addComment(newComment);
-      }
-    };
-
-    eventSource.onerror = (error) => {
-      console.error('SSE error:', error);
-      eventSource.close();
-    };
-
-    return () => {
-      eventSource.close();
-    };
-  }, [conversationDetails.id, addComment]);
+  const handleAddComment = async (content: string) => {
+    try {
+      await addComment(content);
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Fallo al añadir el comentario',
+        variant: 'destructive',
+      });
+    }
+  };
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-10">
@@ -126,7 +112,7 @@ export default function ConversationDetails({ conversationDetails }: Conversatio
           {comments.map((comment) => (
             <Comment
               key={comment.id}
-              username={comment.user.username}
+              username={comment.user.username || 'Anónimo'}
               content={comment.content}
               createdAt={comment.createdAt}
             />
@@ -136,7 +122,7 @@ export default function ConversationDetails({ conversationDetails }: Conversatio
 
       <Separator />
 
-      <CommentForm conversationId={conversationDetails.id} onAddComment={addComment} />
+      <CommentForm onSubmit={handleAddComment} />
     </div>
   );
 }

@@ -1,9 +1,8 @@
 import { Comment } from '@/core/entities/Comment';
 import { CommentDTO } from '@/core/dtos/CommentDTO';
-import { User } from '@/core/entities/User';
 
 export class CommentMapper {
-  static toDTO(comment: Comment, user: User): CommentDTO {
+  static toDTO(comment: Comment): CommentDTO {
     return {
       id: comment.id,
       content: comment.content,
@@ -11,8 +10,8 @@ export class CommentMapper {
       userId: comment.userId,
       conversationId: comment.conversationId,
       user: {
-        id: user.id,
-        username: user.username,
+        id: comment.user.id!,
+        username: comment.user.username || 'Usuario Anónimo',
       },
     };
   }
@@ -28,7 +27,10 @@ export class CommentMapper {
       conversationId: row.conversation_id,
       user: {
         id: row.user_id,
-        username: row.user_username || '',
+        username: row.username || row.user_username || 'Usuario Anónimo',
+        fullName: row.full_name || '',
+        email: row.email || '',
+        createdAt: row.user_created_at ? new Date(row.user_created_at) : new Date(),
       },
     };
   }

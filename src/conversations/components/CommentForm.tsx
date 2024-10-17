@@ -7,11 +7,10 @@ import { Textarea } from '@/shared/components/ui/textarea';
 import { useToast } from '@/shared/hooks/use-toast';
 
 interface CommentFormProps {
-  conversationId: number;
-  onAddComment: (comment: string) => void;
+  onSubmit: (content: string) => Promise<void>;
 }
 
-export default function CommentForm({ conversationId, onAddComment }: CommentFormProps) {
+export default function CommentForm({ onSubmit }: CommentFormProps) {
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { data: session, status } = useSession();
@@ -31,21 +30,7 @@ export default function CommentForm({ conversationId, onAddComment }: CommentFor
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`/api/conversations/${conversationId}/comments`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ content }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to add comment');
-      }
-
-      const newComment = await response.json();
-      onAddComment(newComment);
+      await onSubmit(content);
       setContent('');
       toast({
         title: 'Comentario añadido',
