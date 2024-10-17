@@ -79,10 +79,16 @@ export default function ConversationDetails({ conversationDetails }: Conversatio
   );
   const { toast } = useToast();
 
+  console.info(`Rendering ConversationDetails for conversation ${conversationDetails.id}`);
+  console.debug(`Initial comments count: ${comments.length}`);
+
   const handleAddComment = async (content: string) => {
     try {
+      console.info(`Attempting to add comment to conversation ${conversationDetails.id}`);
       await addComment(content);
+      console.info('Comment added successfully');
     } catch (error) {
+      console.error('Error adding comment:', error);
       toast({
         title: 'Error',
         description: error instanceof Error ? error.message : 'Fallo al añadir el comentario',

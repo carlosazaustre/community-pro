@@ -6,22 +6,34 @@ export function useComments(initialComments: CommentDTO[], conversationId: numbe
 
   const addComment = useCallback(
     async (content: string): Promise<CommentDTO> => {
-      const response = await fetch(`/api/conversations/${conversationId}/comments`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ content }),
-      });
+      console.info(`Attempting to add comment to conversation ${conversationId}`);
+      try {
+        const response = await fetch(`/api/conversations/${conversationId}/comments`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ content }),
+        });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to add comment');
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error(`Failed to add comment: ${errorData.error}`);
+          throw new Error(errorData.error || 'Failed to add comment');
+        }
+
+        const newComment: CommentDTO = await response.json();
+        console.info(`Comment added successfully, id: ${newComment.id}`);
+        setComments((prevComments) => {
+          const updatedComments = [...prevComments, newComment];
+          console.debug(`Updated comments count: ${updatedComments.length}`);
+          return updatedComments;
+        });
+        return newComment;
+      } catch (error) {
+        console.error('Error in addComment:', error);
+        throw error;
       }
-
-      const newComment: CommentDTO = await response.json();
-      setComments((prevComments) => [...prevComments, newComment]);
-      return newComment;
     },
     [conversationId]
   );

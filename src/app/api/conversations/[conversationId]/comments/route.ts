@@ -81,33 +81,32 @@ export async function POST(
   request: NextRequest,
   { params }: { params: { conversationId: string } }
 ) {
+  console.info(`Received POST request for conversation ${params.conversationId}`);
   const session = await getServerSession(authOptions);
 
   if (!session || !session.user || !session.user.id) {
+    console.warn('Unauthorized attempt to add comment');
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   const { content } = await request.json();
 
   if (!content) {
+    console.warn('Attempt to add comment with empty content');
     return NextResponse.json({ error: 'Content is required' }, { status: 400 });
   }
 
   try {
+    console.info(
+      `Adding comment for user ${session.user.id} to conversation ${params.conversationId}`
+    );
     const comment = await addComment({
       userId: parseInt(session.user.id, 10),
       conversationId: parseInt(params.conversationId, 10),
       content,
     });
 
-    // Send SSE Event
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const connections = (global as any).connections;
-    if (connections && connections[params.conversationId]) {
-      connections[params.conversationId].forEach((sendEvent: (data: string) => void) => {
-        sendEvent(JSON.stringify(comment));
-      });
-    }
+    console.info(`Comment added successfully, id: ${comment.id}`);
 
     return NextResponse.json(comment);
   } catch (error) {

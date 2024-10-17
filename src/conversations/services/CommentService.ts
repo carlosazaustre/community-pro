@@ -22,6 +22,18 @@ interface CommentProps {
   content: string;
 }
 
-export async function addComment({ userId, conversationId, content }: CommentProps): Promise<CommentDTO> {
-  return await addCommentUseCase.execute(userId, conversationId, content);
+export async function addComment({
+  userId,
+  conversationId,
+  content,
+}: CommentProps): Promise<CommentDTO> {
+  console.info(`Attempting to add comment for user ${userId} to conversation ${conversationId}`);
+  try {
+    const comment = await addCommentUseCase.execute(userId, conversationId, content);
+    console.info(`Comment added successfully, id: ${comment.id}`);
+    return comment;
+  } catch (error) {
+    console.error('Error in addComment service:', error);
+    throw error;
+  }
 }
