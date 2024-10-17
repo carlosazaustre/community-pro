@@ -29,7 +29,7 @@ export class AddCommentUseCase {
     const user = await this.userRepository.getUserById(userId);
 
     if (!user) {
-      throw new Error('User not found');
+      throw new Error(`User not found with id: ${userId}`);
     }
 
     if (!user.emailVerified) {

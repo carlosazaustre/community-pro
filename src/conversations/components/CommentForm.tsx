@@ -14,14 +14,14 @@ interface CommentFormProps {
 export default function CommentForm({ conversationId, onAddComment }: CommentFormProps) {
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!session) {
+    if (status !== 'authenticated' || !session?.user?.id) {
       toast({
-        title: 'Inicia sesión',
+        title: 'Error',
         description: 'Debes iniciar sesión para poder comentar.',
         variant: 'destructive',
       });
@@ -40,7 +40,8 @@ export default function CommentForm({ conversationId, onAddComment }: CommentFor
       });
 
       if (!response.ok) {
-        throw new Error('Failed to add comment');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to add comment');
       }
 
       const newComment = await response.json();
@@ -54,13 +55,21 @@ export default function CommentForm({ conversationId, onAddComment }: CommentFor
       console.error('Error adding comment:', error);
       toast({
         title: 'Error',
-        description: 'Failed to add comment',
+        description: error instanceof Error ? error.message : 'Fallo al añadir el comentario',
         variant: 'destructive',
       });
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  if (status === 'loading') {
+    return <p>Loading...</p>;
+  }
+
+  if (status === 'unauthenticated') {
+    return <p>Please sign in to comment.</p>;
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">

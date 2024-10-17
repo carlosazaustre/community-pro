@@ -1,8 +1,6 @@
-import { authenticateUser } from '@/auth/services/AuthService';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import type { NextAuthOptions, User } from 'next-auth';
-import type { JWT } from 'next-auth/jwt';
-import type { Session } from 'next-auth';
+import type { NextAuthOptions } from 'next-auth';
+import { authenticateUser } from '@/auth/services/AuthService';
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
@@ -14,7 +12,7 @@ export const authOptions: NextAuthOptions = {
         username: { label: 'Username', type: 'text', placeholder: 'Tu nombre de usuario' },
         password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials): Promise<User | null> {
+      async authorize(credentials) {
         if (!credentials?.username || !credentials?.password) {
           return null;
         }
@@ -24,16 +22,7 @@ export const authOptions: NextAuthOptions = {
           password: credentials.password,
         });
 
-        if (user) {
-          return {
-            id: user.id.toString(),
-            name: user.username,
-            email: user.email,
-            username: user.username,
-          };
-        }
-
-        return null;
+        return user;
       },
     }),
   ],
@@ -52,21 +41,17 @@ export const authOptions: NextAuthOptions = {
   },
 
   callbacks: {
-    async jwt({ token, user }: { token: JWT; user?: User }) {
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
       }
       return token;
     },
-    async session({ session, token }: { session: Session; token: JWT }) {
-      if (token && typeof token.id === 'number') {
-        session.user.id = token.id;
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string;
       }
       return session;
     },
-  },
-
-  session: {
-    strategy: 'jwt',
   },
 };

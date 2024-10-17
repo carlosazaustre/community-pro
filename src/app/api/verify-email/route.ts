@@ -1,5 +1,3 @@
-// Route: /api/verify-email
-
 import { NextResponse } from 'next/server';
 import { verifyEmail } from '@/auth/services/AuthService';
 

@@ -12,7 +12,7 @@ export class UserMapper {
       email: row.email,
       passwordHash: row.password_hash,
       createdAt: new Date(row.created_at),
-      updatedAt: new Date(row.updated_at),
+      updatedAt: row.updated_at ? new Date(row.updated_at) : undefined,
       emailVerified: row.email_verified || false,
       verificationToken: row.verification_token || undefined,
       verificationTokenExpiresAt: row.verification_token_expires_at

@@ -77,10 +77,13 @@ import { addComment } from '@/conversations/services/CommentService';
  *                 error:
  *                   type: string
  */
-export async function POST(request: NextRequest, { params }: { params: { conversationId: string } }) {
+export async function POST(
+  request: NextRequest,
+  { params }: { params: { conversationId: string } }
+) {
   const session = await getServerSession(authOptions);
 
-  if (!session || !session.user) {
+  if (!session || !session.user || !session.user.id) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -92,14 +95,17 @@ export async function POST(request: NextRequest, { params }: { params: { convers
 
   try {
     const comment = await addComment({
-      userId: session.user.id,
-      conversationId: parseInt(params.conversationId),
+      userId: parseInt(session.user.id, 10),
+      conversationId: parseInt(params.conversationId, 10),
       content,
     });
 
     return NextResponse.json(comment);
   } catch (error) {
     console.error('Error adding comment:', error);
-    return NextResponse.json({ error: 'An error occurred while adding the comment' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'An error occurred while adding the comment' },
+      { status: 500 }
+    );
   }
 }
