@@ -20,6 +20,7 @@ export class GetConversationDetailsUseCase {
   constructor(private conversationRepository: ConversationRepository) {}
 
   async execute(conversationId: number): Promise<ConversationDetailsDTO> {
+    console.info(`Fetching details for conversation ${conversationId}`);
     let commentCount = 0;
     const [conversation, user, topic, comments] = await Promise.all([
       this.conversationRepository.getConversationDetails(conversationId),
@@ -29,17 +30,30 @@ export class GetConversationDetailsUseCase {
     ]);
 
     if (!conversation) {
+      console.error(`Conversation not found for id: ${conversationId}`);
       throw new Error('Conversation not found');
     }
 
     if (!user) {
+      console.error(`User not found for conversation: ${conversationId}`);
       throw new Error('User not found for conversation');
     }
 
     if (comments) {
       commentCount = comments.length;
+      console.info(`Found ${commentCount} comments for conversation ${conversationId}`);
+    } else {
+      console.warn(`No comments found for conversation ${conversationId}`);
     }
 
-    return ConversationMapper.toDetailsDTO(conversation, user, topic, commentCount, comments || []);
+    const result = ConversationMapper.toDetailsDTO(
+      conversation,
+      user,
+      topic,
+      commentCount,
+      comments || []
+    );
+    console.info(`Conversation details mapped, returning ${result.comments.length} comments`);
+    return result;
   }
 }

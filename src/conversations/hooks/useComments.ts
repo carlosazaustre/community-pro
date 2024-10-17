@@ -2,6 +2,9 @@ import { useState, useCallback } from 'react';
 import { CommentDTO } from '@/core/dtos/CommentDTO';
 
 export function useComments(initialComments: CommentDTO[], conversationId: number) {
+  console.info(
+    `Initializing useComments for conversation ${conversationId} with ${initialComments.length} comments`
+  );
   const [comments, setComments] = useState<CommentDTO[]>(initialComments);
 
   const addComment = useCallback(

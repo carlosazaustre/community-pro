@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { ConversationDetailsDTO } from '@/core/dtos/ConversationDetailsDTO';
 import { CommentDTO } from '@/core/dtos/CommentDTO';
 import Comment from '@/conversations/components/Comment';
@@ -73,14 +74,20 @@ interface ConversationDetailsProps {
 }
 
 export default function ConversationDetails({ conversationDetails }: ConversationDetailsProps) {
+  console.info(`Rendering ConversationDetails for conversation ${conversationDetails.id}`);
+  console.info(`Initial comments count: ${conversationDetails.comments.length}`);
+
   const { comments, addComment } = useComments(
     conversationDetails.comments as CommentDTO[],
     conversationDetails.id
   );
   const { toast } = useToast();
 
-  console.info(`Rendering ConversationDetails for conversation ${conversationDetails.id}`);
-  console.debug(`Initial comments count: ${comments.length}`);
+  console.info(`Current comments count from useComments: ${comments.length}`);
+
+  useEffect(() => {
+    console.info(`Comments updated, new count: ${comments.length}`);
+  }, [comments]);
 
   const handleAddComment = async (content: string) => {
     try {

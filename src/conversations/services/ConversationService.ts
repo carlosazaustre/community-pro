@@ -45,5 +45,16 @@ export async function getConversationDetails({
 }: {
   conversationId: number;
 }): Promise<ConversationDetailsDTO> {
-  return getConversationDetailsUseCase.execute(conversationId);
+  console.info(`Getting conversation details for conversation ${conversationId}`);
+
+  try {
+    const result = await getConversationDetailsUseCase.execute(conversationId);
+    console.info(
+      `Retrieved conversation details for ${conversationId}, found ${result.comments.length} comments`
+    );
+    return result;
+  } catch (error) {
+    console.error(`Error getting conversation details for ${conversationId}:`, error);
+    throw error;
+  }
 }
