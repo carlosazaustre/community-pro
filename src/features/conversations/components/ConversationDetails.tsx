@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { ConversationDetailsDTO } from '@/core/dtos/ConversationDetailsDTO';
 import { CommentDTO } from '@/core/dtos/CommentDTO';
 import Comment from '@/features/conversations/components/Comment';
@@ -9,7 +10,8 @@ import { useComments } from '@/features/conversations/hooks/useComments';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import { Separator } from '@/shared/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
-import { CalendarDays, MessageCircle, Tag } from 'lucide-react';
+import { Button } from '@/shared/components/ui/button';
+import { ArrowLeft, CalendarDays, MessageCircle, Tag } from 'lucide-react';
 import { useToast } from '@/shared/hooks/use-toast';
 
 interface ConversationHeaderProps {
@@ -74,16 +76,12 @@ interface ConversationDetailsProps {
 }
 
 export default function ConversationDetails({ conversationDetails }: ConversationDetailsProps) {
-  console.info(`Rendering ConversationDetails for conversation ${conversationDetails.id}`);
-  console.info(`Initial comments count: ${conversationDetails.comments.length}`);
-
+  const router = useRouter();
   const { comments, addComment } = useComments(
     conversationDetails.comments as CommentDTO[],
     conversationDetails.id
   );
   const { toast } = useToast();
-
-  console.info(`Current comments count from useComments: ${comments.length}`);
 
   useEffect(() => {
     console.info(`Comments updated, new count: ${comments.length}`);
@@ -106,6 +104,9 @@ export default function ConversationDetails({ conversationDetails }: Conversatio
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-10">
+      <Button variant="ghost" onClick={() => router.back()} className="mb-4">
+        <ArrowLeft className="mr-2 h-4 w-4" /> Volver
+      </Button>
       <Card>
         <ConversationHeader
           title={conversationDetails.title}
