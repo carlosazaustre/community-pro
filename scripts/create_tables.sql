@@ -54,7 +54,8 @@ CREATE TABLE comments (
     user_id INTEGER NOT NULL REFERENCES users(id),
     content TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP
+    updated_at TIMESTAMP,
+    is_approved BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 -- Create notifications table
@@ -104,3 +105,4 @@ CREATE INDEX idx_comments_user_id ON comments(user_id);
 CREATE INDEX idx_notifications_user_id ON notifications(user_id);
 CREATE INDEX idx_user_activity_user_id ON user_activity(user_id);
 CREATE INDEX idx_users_verification_token ON users(verification_token);
+CREATE INDEX idx_comments_is_approved ON comments(is_approved);

@@ -53,6 +53,20 @@ export class DatabaseUserRepository implements UserRepository {
   }
 
   /**
+   * Retrieves a user by their ID from the database.
+   *
+   * @param userId - The unique identifier of the user to retrieve.
+   * @returns A promise that resolves to the user if found, or null if no user is found.
+   */
+  async getUserById(userId: number): Promise<User | null> {
+    const { rows } = await sql`
+      SELECT * FROM users WHERE id = ${userId}
+    `;
+
+    return rows.length > 0 ? UserMapper.toDomain(rows[0]) : null;
+  }
+
+  /**
    * Sets a verification token for a user in the database.
    *
    * @param userId - The unique identifier of the user.

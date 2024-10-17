@@ -1,11 +1,7 @@
 import { UserRepository } from '@/core/interfaces/UserRepository';
+import { AuthenticatedUserDTO } from '@/core/dtos/AuthenticatedUserDTO';
+import { AuthMapper } from '@/infrastructure/mappers/AuthMapper';
 import bcrypt from 'bcrypt';
-
-interface AuthenticatedUser {
-  id: string;
-  username: string;
-  email: string;
-}
 
 /**
  * Use case for authenticating a user.
@@ -23,7 +19,7 @@ interface AuthenticatedUser {
 export class AuthenticateUserUseCase {
   constructor(private userRepository: UserRepository) {}
 
-  async execute(username: string, password: string): Promise<AuthenticatedUser | null> {
+  async execute(username: string, password: string): Promise<AuthenticatedUserDTO | null> {
     const user = await this.userRepository.getUserByUsername(username);
 
     if (!user || !user.passwordHash) {
@@ -36,10 +32,6 @@ export class AuthenticateUserUseCase {
       return null;
     }
 
-    return {
-      id: user.id.toString(),
-      username: user.username,
-      email: user.email,
-    };
+    return AuthMapper.toDTO(user);
   }
 }

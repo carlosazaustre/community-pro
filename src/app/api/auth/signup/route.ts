@@ -1,5 +1,3 @@
-// Route: /api/auth/signup/
-
 import { NextResponse } from 'next/server';
 import { registerUser } from '@/auth/services/AuthService';
 
@@ -78,7 +76,10 @@ export async function POST(request: Request) {
       password,
     });
 
-    return NextResponse.json({ message: 'User registered successfully', userId: user.id }, { status: 201 });
+    return NextResponse.json(
+      { message: 'User registered successfully', userId: user.id },
+      { status: 201 }
+    );
   } catch (error) {
     console.error('Error in signup:', error);
     if (error instanceof Error) {

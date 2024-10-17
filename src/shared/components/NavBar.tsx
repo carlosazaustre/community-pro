@@ -25,10 +25,16 @@ export default function NavBar() {
             </div>
           </div>
           <div className="hidden sm:ml-6 sm:flex sm:items-center">
-            <a href="#" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-500">
+            <a
+              href="#"
+              className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-500"
+            >
               Comunidad
             </a>
-            <a href="#" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-500">
+            <a
+              href="#"
+              className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-500"
+            >
               Miembros
             </a>
             {session ? (
@@ -42,7 +48,7 @@ export default function NavBar() {
                       width={32}
                       height={32}
                       src={`https://avatar.vercel.sh/${session.user.username}`}
-                      alt={session.user.username}
+                      alt={session.user.username || ''}
                       className="rounded-full"
                       objectFit="cover"
                     />
@@ -94,12 +100,14 @@ export default function NavBar() {
                         width={40}
                         height={40}
                         src={`https://avatar.vercel.sh/${session.user.username}`}
-                        alt={session.user.username}
+                        alt={session.user.username || ''}
                       />
                     </Avatar>
                   </div>
                   <div className="ml-3">
-                    <div className="text-base font-medium text-gray-800">{session.user.username}</div>
+                    <div className="text-base font-medium text-gray-800">
+                      {session.user.username}
+                    </div>
                     <div className="text-sm font-medium text-gray-500">{session.user.email}</div>
                   </div>
                 </div>

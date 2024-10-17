@@ -1,5 +1,3 @@
-// Route: /api/swagger
-
 import { NextResponse } from 'next/server';
 import swaggerSpec from '@/shared/lib/swagger';
 

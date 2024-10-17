@@ -5,7 +5,7 @@ export interface User {
   email: string;
   passwordHash: string;
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt: Date | undefined;
   emailVerified: boolean;
   verificationToken?: string;
   verificationTokenExpiresAt?: Date;

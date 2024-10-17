@@ -1,5 +1,3 @@
-// Route: /api/conversations
-
 import { NextRequest, NextResponse } from 'next/server';
 import { getConversations } from '@/conversations/services/ConversationService';
 

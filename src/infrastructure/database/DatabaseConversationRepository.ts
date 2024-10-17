@@ -5,6 +5,7 @@ import { Topic } from '@/core/entities/Topic';
 import { Comment } from '@/core/entities/Comment';
 import { UserMapper } from '@/infrastructure/mappers/UserMapper';
 import { ConversationMapper } from '@/infrastructure/mappers/ConversationMapper';
+import { CommentMapper } from '@/infrastructure/mappers/CommentMapper';
 import { sql } from '@vercel/postgres';
 
 export class DatabaseConversationRepository implements ConversationRepository {
@@ -175,18 +176,6 @@ export class DatabaseConversationRepository implements ConversationRepository {
       ORDER BY c.created_at ASC
     `;
 
-    // TODO: Create a CommentMapper
-    return rows.map((row) => ({
-      id: row.id,
-      content: row.content,
-      createdAt: new Date(row.created_at),
-      updatedAt: new Date(row.updated_at),
-      userId: row.user_id,
-      conversationId,
-      user: {
-        id: row.user_id,
-        username: row.user_username,
-      },
-    }));
+    return rows.map(CommentMapper.toDomain);
   }
 }
