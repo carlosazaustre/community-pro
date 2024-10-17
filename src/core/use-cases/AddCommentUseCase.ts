@@ -2,6 +2,7 @@ import { CommentRepository } from '@/core/interfaces/CommentRepository';
 import { UserRepository } from '@/core/interfaces/UserRepository';
 import { CommentDTO } from '@/core/dtos/CommentDTO';
 import { CommentMapper } from '@/infrastructure/mappers/CommentMapper';
+import DOMPurify from 'isomorphic-dompurify';
 
 /**
  * Use case for adding a comment to a conversation.
@@ -34,6 +35,12 @@ export class AddCommentUseCase {
 
     if (!user.emailVerified) {
       throw new Error('Email not verified');
+    }
+
+    const sanitizedContent = DOMPurify.sanitize(content, { ALLOWED_TAGS: [] });
+
+    if (sanitizedContent.trim() === '') {
+      throw new Error('Comment content is empty');
     }
 
     const comment = await this.commentRepository.addComment(userId, conversationId, content);

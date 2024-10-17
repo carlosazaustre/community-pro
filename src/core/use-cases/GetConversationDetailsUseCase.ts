@@ -44,7 +44,6 @@ export class GetConversationDetailsUseCase {
     }
 
     if (comments) {
-      console.log('Comentarios Mapeados: ', comments);
       commentCount = comments.length;
       console.info(`Found ${commentCount} comments for conversation ${conversationId}`);
     } else {
