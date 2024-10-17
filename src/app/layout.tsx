@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
+import { ToastProvider } from '@/shared/components/ui/toast';
+import { Toaster } from '@/shared/components/ui/toaster';
 import SessionProvider from '@/shared/components/SessionProvider';
 import NavBar from '@/shared/components/NavBar';
 import './globals.css';
@@ -30,8 +32,11 @@ export default function RootLayout({
     <html lang="es">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <SessionProvider>
-          <NavBar />
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">{children}</div>
+          <ToastProvider>
+            <NavBar />
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">{children}</div>
+            <Toaster />
+          </ToastProvider>
         </SessionProvider>
       </body>
     </html>
