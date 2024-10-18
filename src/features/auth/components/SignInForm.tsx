@@ -49,6 +49,7 @@ export default function LoginForm() {
           username: formData.username,
           password: formData.password,
           redirect: false,
+          callbackUrl: '/',
         });
 
         if (result?.error) {

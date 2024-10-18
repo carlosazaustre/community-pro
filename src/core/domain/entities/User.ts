@@ -9,4 +9,5 @@ export interface User {
   emailVerified: boolean;
   verificationToken?: string;
   verificationTokenExpiresAt?: Date;
+  rememberMeToken?: string;
 }

@@ -1,7 +1,7 @@
 import { CreatedUserDTO } from '@/core/dtos/UserDTO';
 import { UserRepository } from '@/core/interfaces/UserRepository';
 import { UserMapper } from '@/infrastructure/mappers/UserMapper';
-import { EmailService } from '@/features/auth/services/EmailService';
+import { EmailService } from '@/infrastructure/services/EmailService';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 
