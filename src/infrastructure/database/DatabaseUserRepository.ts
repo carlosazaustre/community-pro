@@ -112,4 +112,19 @@ export class DatabaseUserRepository implements UserRepository {
       WHERE id = ${userId}
     `;
   }
+
+  async setRememberMeToken(userId: number, token: string | null): Promise<void> {
+    await sql`
+      UPDATE users
+      SET remember_me_token = ${token}
+      WHERE id = ${userId}
+    `;
+  }
+
+  async getUserByRememberMeToken(token: string): Promise<User | null> {
+    const { rows } = await sql`
+      SELECT * FROM users WHERE remember_me_token = ${token}
+    `;
+    return rows.length > 0 ? UserMapper.toDomain(rows[0]) : null;
+  }
 }

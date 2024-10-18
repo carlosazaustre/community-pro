@@ -16,6 +16,7 @@ import bcrypt from 'bcrypt';
  * @param {string} password - The password of the user to authenticate.
  * @returns {Promise<Omit<User, 'passwordHash'> | null>} - Returns the user data without the password hash if authentication is successful, otherwise returns null.
  */
+
 export class AuthenticateUserUseCase {
   constructor(private userRepository: UserRepository) {}
 

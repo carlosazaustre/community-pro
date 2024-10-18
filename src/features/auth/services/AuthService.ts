@@ -1,14 +1,16 @@
 import { AuthenticateUserUseCase } from '@/core/use-cases/AuthenticateUserUseCase';
 import { CreateUserUseCase } from '@/core/use-cases/CreateUserUseCase';
 import { VerifyEmailUseCase } from '@/core/use-cases/VerifyEmailUseCase';
+import { RememberMeUseCase } from '@/core/use-cases/RememberMeUseCase';
 import { DatabaseUserRepository } from '@/infrastructure/database/DatabaseUserRepository';
-import { EmailService } from '@/features/auth/services/EmailService';
+import { EmailService } from '@/infrastructure/services/EmailService';
 
 const emailService = new EmailService();
 const userRepository = new DatabaseUserRepository();
 const createUserUseCase = new CreateUserUseCase(userRepository, emailService);
 const authenticateUserUseCase = new AuthenticateUserUseCase(userRepository);
 const verifyEmailUseCase = new VerifyEmailUseCase(userRepository);
+const rememberMeUseCase = new RememberMeUseCase(userRepository);
 
 /**
  * Authenticates a user with the provided credentials.
@@ -56,4 +58,16 @@ export async function registerUser({ fullName, username, email, password }: NewU
  */
 export async function verifyEmail(token: string) {
   return await verifyEmailUseCase.execute(token);
+}
+
+export async function setRememberMeToken(userId: number): Promise<string> {
+  return await rememberMeUseCase.execute(userId);
+}
+
+export async function getUserByRememberMeToken(token: string) {
+  return await rememberMeUseCase.getUserByToken(token);
+}
+
+export async function removeRememberMeToken(userId: number): Promise<void> {
+  await rememberMeUseCase.removeToken(userId);
 }

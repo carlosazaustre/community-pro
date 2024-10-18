@@ -1,6 +1,19 @@
 import CredentialsProvider from 'next-auth/providers/credentials';
-import type { NextAuthOptions } from 'next-auth';
-import { authenticateUser } from '@/features/auth/services/AuthService';
+import type { NextAuthOptions, User as NextAuthUser } from 'next-auth';
+import type { JWT } from 'next-auth/jwt';
+import {
+  authenticateUser,
+  setRememberMeToken,
+  removeRememberMeToken,
+} from '@/features/auth/services/AuthService';
+
+interface ExtendedUser extends NextAuthUser {
+  rememberMeToken?: string;
+}
+
+interface ExtendedJWT extends JWT {
+  userId?: string;
+}
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
@@ -12,7 +25,7 @@ export const authOptions: NextAuthOptions = {
         username: { label: 'Username', type: 'text', placeholder: 'Tu nombre de usuario' },
         password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials) {
+      async authorize(credentials): Promise<ExtendedUser | null> {
         if (!credentials?.username || !credentials?.password) {
           return null;
         }
@@ -22,7 +35,16 @@ export const authOptions: NextAuthOptions = {
           password: credentials.password,
         });
 
-        return user;
+        if (!user) {
+          return null;
+        }
+
+        return {
+          id: user.id,
+          name: user.username,
+          email: user.email,
+          image: null,
+        };
       },
     }),
   ],
@@ -32,24 +54,37 @@ export const authOptions: NextAuthOptions = {
   },
 
   events: {
-    async signOut(message) {
-      console.log('User session closed:', message);
+    async signOut({ token }) {
+      if (token && typeof token.userId === 'string') {
+        const userId = parseInt(token.userId, 10);
+        if (!isNaN(userId)) {
+          await removeRememberMeToken(userId);
+        }
+      }
     },
-    async signIn(message) {
-      console.log('User signed in:', message);
+    async signIn({ user }) {
+      const extendedUser = user as ExtendedUser;
+      if (extendedUser.id) {
+        const userId = parseInt(extendedUser.id, 10);
+        if (!isNaN(userId)) {
+          const rememberMeToken = await setRememberMeToken(userId);
+          extendedUser.rememberMeToken = rememberMeToken;
+        }
+      }
     },
   },
 
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user }): Promise<ExtendedJWT> {
       if (user) {
-        token.id = user.id;
+        token.userId = user.id;
       }
-      return token;
+      return token as ExtendedJWT;
     },
     async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string;
+      const extendedToken = token as ExtendedJWT;
+      if (extendedToken.userId) {
+        session.user.id = extendedToken.userId;
       }
       return session;
     },

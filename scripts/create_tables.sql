@@ -23,7 +23,8 @@ CREATE TABLE users (
     bio TEXT,
     email_verified BOOLEAN DEFAULT FALSE,
     verification_token VARCHAR(255),
-    verification_token_expires_at TIMESTAMP
+    verification_token_expires_at TIMESTAMP,
+    remember_me_token VARCHAR(255) UNIQUE
 );
 
 -- Create topics table

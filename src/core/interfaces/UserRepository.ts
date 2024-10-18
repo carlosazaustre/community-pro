@@ -13,4 +13,6 @@ export interface UserRepository {
   setVerificationToken(userId: number, token: string, expiresAt: Date): Promise<void>;
   getByVerificationToken(token: string): Promise<User | null>;
   updateEmailVerification(userId: number, verified: boolean): Promise<void>;
+  setRememberMeToken(userId: number, token: string | null): Promise<void>;
+  getUserByRememberMeToken(token: string): Promise<User | null>;
 }
